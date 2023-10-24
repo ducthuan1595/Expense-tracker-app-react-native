@@ -1,15 +1,35 @@
-import React, { useLayoutEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useLayoutEffect, useState } from "react";
+import { StyleSheet, Alert, TextInput, View } from "react-native";
 import IconButton from "../components/ui/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { ExpenseStore } from "../store/context";
+import ExpenseForm from "../components/ExpenseForm";
 
 const ManageExpense = ({ route, navigation }) => {
   const expenseId = route.params?.expenseId;
   const isEditing = !!expenseId;
+  const [expensesInput, setExpenses] = useState({
+    amount: "",
+    date: "",
+    desc: "",
+  });
 
-  const { addExpense, deleteExpense, updateExpense } = ExpenseStore();
+  const { addExpense, deleteExpense, updateExpense, expenses } = ExpenseStore();
+
+  useLayoutEffect(() => {
+    if (isEditing && expenseId) {
+      const updateItem = expenses.find((e) => e.id === expenseId);
+      setExpenses((state) => {
+        return {
+          ...state,
+          amount: updateItem.amount.toString(),
+          date: updateItem.date.toISOString().slice(0, 10),
+          desc: updateItem.desc,
+        };
+      });
+    }
+  }, [navigation, isEditing]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -25,24 +45,28 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   };
   const handleConfirm = () => {
-    if (isEditing) {
-      updateExpense(expenseId, {
-        desc: "A mouse",
-        amount: 11.99,
-        date: new Date("2023-10-9"),
-      });
+    const amountIsValid =
+      !isNaN(expensesInput.amount) && +expensesInput.amount > 0;
+    const dateIsValid = expensesInput.date.toString() !== "Invalid Date";
+    const descIsValid = expensesInput.desc.trim().length > 3;
+    if (amountIsValid && dateIsValid && descIsValid) {
+      if (isEditing) {
+        updateExpense(expenseId, {
+          ...expensesInput,
+          date: new Date(expensesInput.date),
+        });
+      } else {
+        addExpense(expensesInput);
+      }
+      navigation.goBack();
     } else {
-      addExpense({
-        desc: "A house",
-        amount: 11.99,
-        date: new Date("2023-10-9"),
-      });
+      Alert.alert("Invalid input!", "Please check your input values");
     }
-    navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
+      <ExpenseForm setExpenses={setExpenses} expenses={expensesInput} />
       <View style={styles.buttons}>
         <PrimaryButton
           style={styles.button}
