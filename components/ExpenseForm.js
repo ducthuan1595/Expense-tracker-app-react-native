@@ -12,7 +12,6 @@ const ExpenseForm = ({ setExpenses, expenses }) => {
     });
   };
   const handleDate = (e) => {
-    console.log(e);
     setExpenses((state) => {
       return {
         ...state,
@@ -40,7 +39,7 @@ const ExpenseForm = ({ setExpenses, expenses }) => {
             onChangeText: handleAmount,
           }}
           style={styles.rowInput}
-          value={expenses.amount}
+          value={expenses.amount.toString()}
         />
         <PrimaryInput
           label={"Date"}

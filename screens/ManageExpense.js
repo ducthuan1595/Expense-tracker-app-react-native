@@ -5,9 +5,14 @@ import { GlobalStyles } from "../constants/styles";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { ExpenseStore } from "../store/context";
 import ExpenseForm from "../components/ExpenseForm";
+import { storeExpense, updateExpenses, deleteExpenses } from "../api/http";
+import Loading from "../components/ui/Loading";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 const ManageExpense = ({ route, navigation }) => {
   const expenseId = route.params?.expenseId;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const isEditing = !!expenseId;
   const [expensesInput, setExpenses] = useState({
     amount: "",
@@ -37,32 +42,67 @@ const ManageExpense = ({ route, navigation }) => {
     });
   }, [navigation, isEditing]);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    setIsLoading(true);
+    try {
+      await deleteExpenses(expenseId);
+    } catch (err) {
+      setError("Could not delete expense - please try again!");
+    }
+    setIsLoading(false);
     deleteExpense(expenseId);
     navigation.goBack();
   };
   const cancelhandler = () => {
     navigation.goBack();
   };
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    setIsLoading(true);
     const amountIsValid =
       !isNaN(expensesInput.amount) && +expensesInput.amount > 0;
     const dateIsValid = expensesInput.date.toString() !== "Invalid Date";
     const descIsValid = expensesInput.desc.trim().length > 3;
     if (amountIsValid && dateIsValid && descIsValid) {
       if (isEditing) {
-        updateExpense(expenseId, {
-          ...expensesInput,
-          date: new Date(expensesInput.date),
-        });
+        try {
+          await updateExpenses(expenseId, {
+            ...expensesInput,
+            date: new Date(expensesInput.date),
+          });
+          updateExpense(expenseId, {
+            ...expensesInput,
+            date: new Date(expensesInput.date),
+          });
+          navigation.goBack();
+        } catch (err) {
+          setError("Could Edit expense - please try again!");
+        }
       } else {
-        addExpense(expensesInput);
+        try {
+          const id = await storeExpense(expensesInput);
+          addExpense({ ...expensesInput, id });
+          navigation.goBack();
+        } catch (err) {
+          setError("Could add expense - please try again!");
+        }
       }
-      navigation.goBack();
+      setIsLoading(false);
     } else {
       Alert.alert("Invalid input!", "Please check your input values");
     }
   };
+
+  const handleError = () => {
+    setError(null);
+  };
+
+  if (error && !isLoading) {
+    return <ErrorOverlay message={error} onPress={handleError} />;
+  }
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>
