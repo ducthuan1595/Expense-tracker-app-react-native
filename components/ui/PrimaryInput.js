@@ -2,14 +2,19 @@ import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
 
-const PrimaryInput = ({ label, textInputConfig, style, value }) => {
+const PrimaryInput = ({ label, textInputConfig, style, value, isLogin }) => {
   let inputStyes = [styles.input];
   if (textInputConfig && textInputConfig.multiline) {
     inputStyes.push(styles.inputMultiline);
   }
+  let labelText = { ...styles.label };
+  if (isLogin) {
+    labelText.color = GlobalStyles.colors.error500;
+    labelText.fontSize = 14;
+  }
   return (
     <View style={[styles.inputContainer, style]}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={labelText}>{label}</Text>
       <TextInput {...textInputConfig} style={inputStyes} value={value} />
     </View>
   );

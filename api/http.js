@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const URL =
-  "https://react-native-a2440-default-rtdb.asia-southeast1.firebasedatabase@app";
+  "https://react-native-a2440-default-rtdb.asia-southeast1.firebasedatabase.app";
 
 export const storeExpense = async (expense) => {
   const res = await axios.post(`${URL}/expenses.json`, expense);
