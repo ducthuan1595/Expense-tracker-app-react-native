@@ -11,6 +11,9 @@ import {
   createDrawerNavigator,
 } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 import ContextProvider from "./store";
 
@@ -21,6 +24,9 @@ import { GlobalStyles } from "./constants/styles";
 import IconButton from "./components/ui/IconButton";
 import Authentication from "./screens/Authentication";
 import { AuthStore } from "./store/authContext";
+import { useEffect, useState } from "react";
+
+SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -106,7 +112,7 @@ function CustomerDrawerContent(props) {
         label={"Logout"}
         onPress={() => {
           logout();
-          navigation.navigate("Authentication");
+          navigation.navigate("Navigation");
         }}
         labelStyle={{ color: GlobalStyles.colors.error500 }}
         icon={({ focused, color, size }) => (
@@ -175,6 +181,31 @@ function Navigation() {
   return <>{!isAuthenticated ? <AuthenticationApp /> : <DrawNavigation />}</>;
 }
 
+const Root = () => {
+  const { login } = AuthStore();
+  const [isLogin, setIsLogin] = useState(true);
+  useEffect(() => {
+    const getToken = async () => {
+      try {
+        const value = await AsyncStorage.getItem("token");
+        if (value) {
+          login(value);
+          setIsLogin(false);
+          await SplashScreen.hideAsync();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getToken();
+  }, []);
+  if (isLogin) {
+    return <AppLoading />;
+  }
+
+  return <Navigation />;
+};
+
 export default function App() {
   return (
     <>
@@ -191,7 +222,7 @@ export default function App() {
           >
             <Stack.Screen
               name="Navigation"
-              component={Navigation}
+              component={Root}
               options={{
                 headerShown: false,
               }}
