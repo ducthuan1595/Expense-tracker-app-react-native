@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
 import * as SplashScreen from "expo-splash-screen";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 import ContextProvider from "./store";
 
@@ -27,6 +28,10 @@ import { AuthStore } from "./store/authContext";
 import { useEffect, useState } from "react";
 
 SplashScreen.preventAutoHideAsync();
+GoogleSignin.configure({
+  webClientId:
+    "300384576511-1cfq6psoqtub50pck22es3nr3adtfcai.apps.googleusercontent.com",
+});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -110,8 +115,9 @@ function CustomerDrawerContent(props) {
       <DrawerItemList {...props} />
       <DrawerItem
         label={"Logout"}
-        onPress={() => {
+        onPress={async () => {
           logout();
+          await GoogleSignin.signOut();
           navigation.navigate("Navigation");
         }}
         labelStyle={{ color: GlobalStyles.colors.error500 }}
@@ -190,9 +196,9 @@ const Root = () => {
         const value = await AsyncStorage.getItem("token");
         if (value) {
           login(value);
-          setIsLogin(false);
           await SplashScreen.hideAsync();
         }
+        setIsLogin(false);
       } catch (err) {
         console.error(err);
       }

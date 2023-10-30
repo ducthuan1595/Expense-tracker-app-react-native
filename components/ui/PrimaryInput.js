@@ -2,7 +2,14 @@ import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
 
-const PrimaryInput = ({ label, textInputConfig, style, value, isLogin }) => {
+const PrimaryInput = ({
+  label,
+  textInputConfig,
+  style,
+  value,
+  isLogin,
+  showSoftInputOnFocus,
+}) => {
   let inputStyes = [styles.input];
   if (textInputConfig && textInputConfig.multiline) {
     inputStyes.push(styles.inputMultiline);
@@ -13,10 +20,17 @@ const PrimaryInput = ({ label, textInputConfig, style, value, isLogin }) => {
     labelText.fontSize = 14;
   }
   return (
-    <View style={[styles.inputContainer, style]}>
-      <Text style={labelText}>{label}</Text>
-      <TextInput {...textInputConfig} style={inputStyes} value={value} />
-    </View>
+    <>
+      <View style={[styles.inputContainer, style]}>
+        <Text style={labelText}>{label}</Text>
+        <TextInput
+          {...textInputConfig}
+          style={inputStyes}
+          value={value}
+          showSoftInputOnFocus={showSoftInputOnFocus === "true" ? false : true}
+        />
+      </View>
+    </>
   );
 };
 
@@ -41,7 +55,7 @@ const styles = StyleSheet.create({
     color: GlobalStyles.colors.primary700,
   },
   inputMultiline: {
-    minHeight: 100,
+    minHeight: 80,
     textAlignVertical: "top",
   },
 });

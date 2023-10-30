@@ -1,12 +1,13 @@
 import React, { useState, useLayoutEffect } from "react";
 import { StyleSheet, Text, View, Button, Pressable, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
 import PrimaryInput from "../components/ui/PrimaryInput";
 import { GlobalStyles } from "../constants/styles";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Loading from "../components/ui/Loading";
-import { loginApi, signUpApi } from "../api/auth";
+import { loginApi, signUpApi, loginWithGoogle } from "../api/auth";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { AuthStore } from "../store/authContext";
 
@@ -53,6 +54,7 @@ const Authentication = () => {
           clearInputValue();
           setIsLogin(true);
         } catch (err) {
+          console.log(err);
           setErrorMessage("Could not create user - please try again!");
         }
       } else {
@@ -70,6 +72,13 @@ const Authentication = () => {
       }
       setIsAuthentication(false);
     }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    const userInfo = await loginWithGoogle();
+    login(userInfo.idToken);
+    navigation.navigate("DrawNavigation", { screen: "DrawNavigation" });
+    console.log(userInfo);
   };
 
   if (errorMessage) {
@@ -136,6 +145,11 @@ const Authentication = () => {
           </Text>
         </Pressable>
       </View>
+      <Text style={{ color: GlobalStyles.colors.primary50 }}>Or</Text>
+      <Pressable onPress={handleLoginWithGoogle} style={{ marginVertical: 20 }}>
+        <GoogleSigninButton />
+        {/* <Text>Login</Text> */}
+      </Pressable>
     </View>
   );
 };
@@ -169,6 +183,8 @@ const styles = StyleSheet.create({
   buttonRedirect: {
     color: "white",
     marginTop: 12,
+    fontSize: 16,
+    marginVertical: 4,
   },
   pressed: {
     opacity: 0.5,

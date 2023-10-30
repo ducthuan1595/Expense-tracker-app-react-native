@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import { StyleSheet, Alert, TextInput, View } from "react-native";
+import { StyleSheet, Alert, ScrollView, View } from "react-native";
 import IconButton from "../components/ui/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -8,15 +8,19 @@ import ExpenseForm from "../components/ExpenseForm";
 import { storeExpense, updateExpenses, deleteExpenses } from "../api/http";
 import Loading from "../components/ui/Loading";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
+import ManagePopup from "../components/popup/ManagePopup";
 
 const ManageExpense = ({ route, navigation }) => {
   const expenseId = route.params?.expenseId;
   const [isLoading, setIsLoading] = useState(false);
+  const [isPopup, setIsPopup] = useState(false);
   const [error, setError] = useState(null);
   const isEditing = !!expenseId;
   const [expensesInput, setExpenses] = useState({
     amount: "",
-    date: "",
+    date: new Date().toISOString().slice(0, 10),
+    category: "",
+    account: "",
     desc: "",
   });
 
@@ -31,6 +35,8 @@ const ManageExpense = ({ route, navigation }) => {
           amount: updateItem.amount.toString(),
           date: updateItem.date.toISOString().slice(0, 10),
           desc: updateItem.desc,
+          category: updateItem.category,
+          account: updateItem.account,
         };
       });
     }
@@ -57,12 +63,21 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   };
   const handleConfirm = async () => {
+    setIsPopup(false);
     setIsLoading(true);
     const amountIsValid =
       !isNaN(expensesInput.amount) && +expensesInput.amount > 0;
     const dateIsValid = expensesInput.date.toString() !== "Invalid Date";
     const descIsValid = expensesInput.desc.trim().length > 3;
-    if (amountIsValid && dateIsValid && descIsValid) {
+    const categoryValid = expensesInput.desc.trim().length > 0;
+    const accountValid = expensesInput.desc.trim().length > 0;
+    if (
+      amountIsValid &&
+      dateIsValid &&
+      descIsValid &&
+      categoryValid &&
+      accountValid
+    ) {
       if (isEditing) {
         try {
           await updateExpenses(expenseId, {
@@ -105,31 +120,38 @@ const ManageExpense = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <ExpenseForm setExpenses={setExpenses} expenses={expensesInput} />
-      <View style={styles.buttons}>
-        <PrimaryButton
-          style={styles.button}
-          mode={"flat"}
-          onPress={cancelhandler}
-        >
-          Cancel
-        </PrimaryButton>
-        <PrimaryButton style={styles.button} onPress={handleConfirm}>
-          {isEditing ? "Update" : "Add"}
-        </PrimaryButton>
-      </View>
-      {isEditing && (
-        <View style={styles.deleteContainer}>
-          <IconButton
-            icon={"trash"}
-            color={GlobalStyles.colors.error500}
-            size={36}
-            onPress={handleDelete}
-          />
+    <>
+      <ScrollView style={styles.container}>
+        <ExpenseForm
+          setExpenses={setExpenses}
+          expenses={expensesInput}
+          setIsPopup={setIsPopup}
+        />
+        <View style={styles.buttons}>
+          <PrimaryButton
+            style={styles.button}
+            mode={"flat"}
+            onPress={cancelhandler}
+          >
+            Cancel
+          </PrimaryButton>
+          <PrimaryButton style={styles.button} onPress={handleConfirm}>
+            {isEditing ? "Update" : "Add"}
+          </PrimaryButton>
         </View>
-      )}
-    </View>
+        {isEditing && (
+          <View style={styles.deleteContainer}>
+            <IconButton
+              icon={"trash"}
+              color={GlobalStyles.colors.error500}
+              size={36}
+              onPress={handleDelete}
+            />
+          </View>
+        )}
+      </ScrollView>
+      {isPopup && <ManagePopup />}
+    </>
   );
 };
 
@@ -152,6 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 20,
   },
   button: {
     minWidth: 120,

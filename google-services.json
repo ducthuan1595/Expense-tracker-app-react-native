@@ -1,0 +1,64 @@
+{
+  "project_info": {
+    "project_number": "300384576511",
+    "firebase_url": "https://react-native-a2440-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "react-native-a2440",
+    "storage_bucket": "react-native-a2440.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300384576511:android:e67ae31884ba65b28abdca",
+        "android_client_info": {
+          "package_name": "com.thuanthien.expensestrackerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300384576511-dr9tsrk63plm4liu0l3von2e031vt9dt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thuanthien.expensestrackerapp",
+            "certificate_hash": "172cb86a1fd4a888f8aef7f33f1368ec5d554030"
+          }
+        },
+        {
+          "client_id": "300384576511-frknf309iud3q7p2rsp7s1fq17aa35pu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thuanthien.expensestrackerapp",
+            "certificate_hash": "909414d971a098dae1175804de79b3182323ea20"
+          }
+        },
+        {
+          "client_id": "300384576511-t38vjh50qhog8oghcf134qi4rcbaq9ep.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thuanthien.expensestrackerapp",
+            "certificate_hash": "720729bc079c9f4906e69b63db212ff2160ea660"
+          }
+        },
+        {
+          "client_id": "300384576511-1cfq6psoqtub50pck22es3nr3adtfcai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0t0rfsO0TWIw6LQwbCdlpzWTbBmSsS54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "300384576511-1cfq6psoqtub50pck22es3nr3adtfcai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
