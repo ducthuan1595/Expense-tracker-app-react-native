@@ -60,7 +60,14 @@ const Authentication = () => {
       } else {
         try {
           const data = await loginApi(valueInput.email, valueInput.password);
-          login(data.idToken);
+          console.log({ data });
+          const result = {
+            email: data.email,
+            name: data.name,
+            photo: data?.photo,
+            token: data.idToken,
+          };
+          login(result);
           clearInputValue();
           navigation.navigate("DrawNavigation", { screen: "DrawNavigation" });
         } catch (err) {
@@ -76,9 +83,14 @@ const Authentication = () => {
 
   const handleLoginWithGoogle = async () => {
     const userInfo = await loginWithGoogle();
-    login(userInfo.idToken);
+    const result = {
+      email: userInfo.user.email,
+      name: userInfo.user.name,
+      photo: userInfo.user?.photo,
+      token: userInfo.idToken,
+    };
+    login(result);
     navigation.navigate("DrawNavigation", { screen: "DrawNavigation" });
-    console.log(userInfo);
   };
 
   if (errorMessage) {

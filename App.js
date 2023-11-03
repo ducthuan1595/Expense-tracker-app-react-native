@@ -193,9 +193,10 @@ const Root = () => {
   useEffect(() => {
     const getToken = async () => {
       try {
-        const value = await AsyncStorage.getItem("token");
+        const value = await AsyncStorage.getItem("infoUser");
         if (value) {
-          login(value);
+          const res = JSON.parse(value);
+          login(res);
           await SplashScreen.hideAsync();
         }
         setIsLogin(false);

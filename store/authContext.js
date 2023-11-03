@@ -9,21 +9,32 @@ const AuthContext = createContext({
 });
 
 function AuthContextProvider({ children }) {
-  const [token, setToken] = useState();
+  const [user, setUser] = useState({
+    email: "",
+    name: "",
+    photo: "",
+    token: "",
+  });
 
-  const login = async (token) => {
-    setToken(token);
-    await AsyncStorage.setItem("token", token);
+  const login = async (infoUser) => {
+    setUser(infoUser);
+    await AsyncStorage.setItem("infoUser", JSON.stringify(infoUser));
   };
 
   const logout = async () => {
-    setToken(null);
-    await AsyncStorage.removeItem("token");
+    setUser({
+      email: "",
+      name: "",
+      photo: "",
+      token: "",
+    });
+    await AsyncStorage.removeItem("infoUser");
   };
+  // console.log(!!user.token);
 
   const values = {
-    token,
-    isAuthenticated: !!token,
+    user,
+    isAuthenticated: !!user.token,
     logout,
     login,
   };

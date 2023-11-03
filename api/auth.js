@@ -12,13 +12,12 @@ GoogleSignin.configure({
 const API_KEY = "AIzaSyDOQYVx5oeWJ2ZhAyp85oD8mjnF2zO7ago";
 const authenticate = async (mode, email, password) => {
   const url = `https://identitytoolkit.googleapis.com/v1/accounts:${mode}`;
-  console.log(`${url}?key=${API_KEY}`);
   const res = await axios.post(`${url}?key=${API_KEY}`, {
     email,
     password,
     returnSecureToken: true,
   });
-  console.log(res);
+  // console.log(res);
   return res.data;
 };
 
