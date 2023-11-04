@@ -9,7 +9,7 @@ import {
 import PrimaryInput from "./ui/PrimaryInput";
 import { GlobalStyles } from "../constants/styles";
 
-const ExpenseForm = ({ setExpenses, expenses, setIsPopup }) => {
+const ExpenseForm = ({ setExpenses, expenses, setIsPopup, setNameHeader }) => {
   const handleAmount = (e) => {
     setIsPopup(false);
     setExpenses((state) => {
@@ -37,10 +37,13 @@ const ExpenseForm = ({ setExpenses, expenses, setIsPopup }) => {
       };
     });
   };
-  const handleSelectCategory = (e) => {
+  const handleSelectCategory = (name) => {
+    setNameHeader(name);
     setIsPopup(true);
   };
-  const handleSelectAccount = (e) => {
+  const handleSelectAccount = (name) => {
+    setNameHeader(name);
+
     setIsPopup(true);
   };
 
@@ -71,11 +74,11 @@ const ExpenseForm = ({ setExpenses, expenses, setIsPopup }) => {
             value={expenses.date}
           />
         </View>
-        <Pressable onPress={handleSelectCategory}>
+        <Pressable onPress={handleSelectCategory.bind(null, "Category")}>
           <Text style={styles.text}>Category</Text>
           <View style={[styles.selectInput, styles.marginBottom]}></View>
         </Pressable>
-        <Pressable onPress={handleSelectAccount}>
+        <Pressable onPress={handleSelectAccount.bind(null, "Account")}>
           <Text style={styles.text}>Account</Text>
           <View style={styles.selectInput}></View>
         </Pressable>

@@ -14,6 +14,7 @@ const ManageExpense = ({ route, navigation }) => {
   const expenseId = route.params?.expenseId;
   const [isLoading, setIsLoading] = useState(false);
   const [isPopup, setIsPopup] = useState(false);
+  const [nameHeader, setNameHeader] = useState("");
   const [error, setError] = useState(null);
   const isEditing = !!expenseId;
   const [expensesInput, setExpenses] = useState({
@@ -126,6 +127,7 @@ const ManageExpense = ({ route, navigation }) => {
           setExpenses={setExpenses}
           expenses={expensesInput}
           setIsPopup={setIsPopup}
+          setNameHeader={setNameHeader}
         />
         <View style={styles.buttons}>
           <PrimaryButton
@@ -150,7 +152,7 @@ const ManageExpense = ({ route, navigation }) => {
           </View>
         )}
       </ScrollView>
-      {isPopup && <ManagePopup />}
+      {isPopup && <ManagePopup setIsPopup={setIsPopup} name={nameHeader} />}
     </>
   );
 };

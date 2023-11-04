@@ -20,6 +20,7 @@ import ContextProvider from "./store";
 
 import ManageExpense from "./screens/ManageExpense";
 import RecentExpense from "./screens/RecentExpense";
+import ManageItem from "./screens/ManageItem";
 import AllExpense from "./screens/AllExpense";
 import { GlobalStyles } from "./constants/styles";
 import IconButton from "./components/ui/IconButton";
@@ -91,6 +92,7 @@ function ExpenseOverview() {
           },
         }}
       />
+
       <Tab.Screen
         name="AllExpense"
         component={AllExpense}
@@ -158,6 +160,17 @@ function DrawNavigation() {
           headerShown: false,
           drawerIcon: ({ color, size }) => (
             <Ionicons name="list" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="ManageItem"
+        component={ManageItem}
+        options={{
+          // title: "Manage Item",
+          headerShown: false,
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="create" color={color} size={size} />
           ),
         }}
       />

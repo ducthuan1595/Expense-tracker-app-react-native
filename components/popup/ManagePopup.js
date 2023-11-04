@@ -1,12 +1,21 @@
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import HeaderPopup from "../ui/HeaderPopup";
+import ListItem from "./ListItem";
 
-const ManagePopup = () => {
+const ManagePopup = ({ setIsPopup, name }) => {
   return (
     <View style={styles.container}>
-      <HeaderPopup name="Category" icon={"add"} size={24} color={"white"} />
-      <FlatList>List</FlatList>
+      <HeaderPopup
+        name={name}
+        icon={"create"}
+        size={22}
+        color={"white"}
+        setIsPopup={setIsPopup}
+      />
+      <FlatList>
+        <ListItem items={[]} />
+      </FlatList>
     </View>
   );
 };
