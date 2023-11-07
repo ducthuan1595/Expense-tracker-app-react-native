@@ -1,8 +1,12 @@
 import React from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
-const ManageItem = () => {
-  return <View>ManageItem</View>;
+const ManageItem = ({ name }) => {
+  return (
+    <View>
+      <Text>{name}</Text>
+    </View>
+  );
 };
 
 export default ManageItem;

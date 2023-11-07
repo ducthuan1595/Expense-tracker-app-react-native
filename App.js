@@ -16,11 +16,14 @@ import AppLoading from "expo-app-loading";
 import * as SplashScreen from "expo-splash-screen";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
+import { getHeaderTitle } from "@react-navigation/elements";
+
 import ContextProvider from "./store";
 
 import ManageExpense from "./screens/ManageExpense";
 import RecentExpense from "./screens/RecentExpense";
 import ManageItem from "./screens/ManageItem";
+import AddManageItem from "./screens/AddManageItem";
 import AllExpense from "./screens/AllExpense";
 import { GlobalStyles } from "./constants/styles";
 import IconButton from "./components/ui/IconButton";
@@ -108,6 +111,68 @@ function ExpenseOverview() {
   );
 }
 
+function ManageCategory() {
+  return <ManageItem name={"category"} />;
+}
+
+function ManageAccount() {
+  return <ManageItem name={"account"} />;
+}
+
+function ManageItemOverview() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ navigation }) => ({
+        headerStyle: {
+          backgroundColor: GlobalStyles.colors.primary500,
+        },
+        headerTintColor: "#fff",
+        tabBarStyle: {
+          backgroundColor: GlobalStyles.colors.primary500,
+        },
+        tabBarActiveTintColor: GlobalStyles.colors.accent500,
+        headerLeft: (props) => <IconDrawer {...props} />,
+        headerRight: ({ tintColor }) => {
+          return (
+            <IconButton
+              icon="add"
+              size={24}
+              color={tintColor}
+              onPress={() => {
+                navigation.navigate("AddManageItem");
+              }}
+            />
+          );
+        },
+      })}
+    >
+      <Tab.Screen
+        name="ManageCategory"
+        component={ManageCategory}
+        options={{
+          title: "Manage Category",
+          tabBarLabel: "Category",
+          tabBarIcon: ({ color, size }) => {
+            return <Ionicons name="create" size={size} color={color} />;
+          },
+        }}
+      />
+
+      <Tab.Screen
+        name="ManageAccount"
+        component={ManageAccount}
+        options={{
+          title: "Manage Account",
+          tabBarLabel: "Account",
+          tabBarIcon: ({ color, size }) => {
+            return <Ionicons name="card" size={size} color={color} />;
+          },
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
 function CustomerDrawerContent(props) {
   const navigation = useNavigation();
   const { logout } = AuthStore();
@@ -143,7 +208,7 @@ function DrawNavigation() {
         headerTintColor: "#fff",
         sceneContainerStyle: { backgroundColor: "#3f2f25" },
         drawerContentStyle: { backgroundColor: "#351401" },
-        drawerInactiveTintColor: "#fff",
+        drawerInactiveTintColor: GlobalStyles.colors.primary500,
         drawerActiveTintColor: "#351401",
         drawerActiveBackgroundColor: "#e4baa1",
         drawerItemStyle: {
@@ -165,9 +230,9 @@ function DrawNavigation() {
       />
       <Drawer.Screen
         name="ManageItem"
-        component={ManageItem}
+        component={ManageItemOverview}
         options={{
-          // title: "Manage Item",
+          title: "Manage Item",
           headerShown: false,
           drawerIcon: ({ color, size }) => (
             <Ionicons name="create" color={color} size={size} />
@@ -260,6 +325,13 @@ export default function App() {
               options={{
                 // title: "Manage Expense",
                 presentation: "modal", //2 task add and edit
+              }}
+            />
+            <Stack.Screen
+              name="AddManageItem"
+              component={AddManageItem}
+              options={{
+                presentation: "modal",
               }}
             />
           </Stack.Navigator>
