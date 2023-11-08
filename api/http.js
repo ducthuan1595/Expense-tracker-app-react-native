@@ -31,5 +31,35 @@ export const updateExpenses = async (id, expense) => {
 };
 
 export const deleteExpenses = async (id) => {
-  return axios.delete(`${URL}/${id}.json`);
+  return axios.delete(`${URL}/expenses/${id}.json`);
+};
+
+// Category
+export const addCategoryApi = async (category) => {
+  console.log({ category });
+  const res = await axios.post(`${URL}/category.json`, category);
+  const id = res.data.name;
+  return id;
+};
+
+export const fetchCategoryApi = async () => {
+  const res = await axios.get(`${URL}/category.json`);
+  const categories = [];
+  for (const key in res.data) {
+    const category = {
+      id: key,
+      name: res.data[key].name,
+    };
+    categories.push(category);
+  }
+
+  return categories;
+};
+
+export const deleteCategoryApi = async (id) => {
+  return axios.delete(`${URL}/category/${id}.json`);
+};
+
+export const updateCategoryApi = async (id, category) => {
+  return axios.put(`${URL}/category/${id}.json`, category);
 };

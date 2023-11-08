@@ -122,7 +122,7 @@ function ManageAccount() {
 function ManageItemOverview() {
   return (
     <Tab.Navigator
-      screenOptions={({ navigation }) => ({
+      screenOptions={({ navigation, route }) => ({
         headerStyle: {
           backgroundColor: GlobalStyles.colors.primary500,
         },
@@ -133,13 +133,17 @@ function ManageItemOverview() {
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
         headerLeft: (props) => <IconDrawer {...props} />,
         headerRight: ({ tintColor }) => {
+          let name;
+          navigation.addListener("focus", (e) => {
+            name = e.target;
+          });
           return (
             <IconButton
               icon="add"
               size={24}
               color={tintColor}
               onPress={() => {
-                navigation.navigate("AddManageItem");
+                navigation.navigate("AddManageItem", { name: name });
               }}
             />
           );
