@@ -1,11 +1,11 @@
 import { createContext, useContext, useReducer } from "react";
 
 const Context = createContext({
-  categories: [],
-  addCategory: (name) => {},
-  removeCategory: (categoryId) => {},
-  editCategory: (name, categoryId) => {},
-  setCategories: (categories) => {},
+  accounts: [],
+  addAccount: (name) => {},
+  removeAccount: (id) => {},
+  editAccount: (name, id) => {},
+  setAccount: (data) => {},
 });
 
 const reducer = (state, action) => {
@@ -13,20 +13,17 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "SET":
       const data = action.payload.reverse();
-      console.log("new category", data);
       return data;
     case "ADD":
       const newData = [...state, action.payload];
       console.log("new data", newData);
       return newData;
     case "EDIT":
-      const findIndexCategory = state.findIndex(
-        (e) => e.id === action.payload.id
-      );
-      const updateCategory = state[findIndexCategory];
-      const updateItem = { ...updateCategory, ...action.payload.data };
+      const findIndexData = state.findIndex((e) => e.id === action.payload.id);
+      const updateData = state[findIndexData];
+      const updateItem = { ...updateData, ...action.payload.data };
       const cpState = [...state];
-      cpState[findIndexCategory] = updateItem;
+      cpState[findIndexData] = updateItem;
       return cpState;
     case "DELETE":
       return state.filter((c) => c.id !== action.payload);
@@ -35,40 +32,40 @@ const reducer = (state, action) => {
   }
 };
 
-const ProviderCategory = ({ children }) => {
-  const [categories, dispatch] = useReducer(reducer, []);
+const ProviderAccount = ({ children }) => {
+  const [accounts, dispatch] = useReducer(reducer, []);
 
-  const addCategory = (data) => {
+  const addAccount = (data) => {
     console.log("daa", data);
     dispatch({ type: "ADD", payload: data });
   };
 
-  const editCategory = (data, id) => {
+  const editAccount = (data, id) => {
     dispatch({ type: "EDIT", payload: { id, data } });
   };
 
-  const removeCategory = (id) => {
+  const removeAccount = (id) => {
     dispatch({ type: "DELETE", payload: id });
   };
 
-  const setCategories = (data) => {
-    console.log("set", data);
+  const setAccount = (data) => {
+    console.log({ data });
     dispatch({ type: "SET", payload: data });
   };
 
   const value = {
-    addCategory,
-    editCategory,
-    removeCategory,
-    setCategories,
-    categories,
+    addAccount,
+    editAccount,
+    removeAccount,
+    setAccount,
+    accounts,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
-export const CategoryStore = () => {
+export const AccountStore = () => {
   return useContext(Context);
 };
 
-export default ProviderCategory;
+export default ProviderAccount;

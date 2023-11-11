@@ -133,17 +133,13 @@ function ManageItemOverview() {
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
         headerLeft: (props) => <IconDrawer {...props} />,
         headerRight: ({ tintColor }) => {
-          let name;
-          navigation.addListener("focus", (e) => {
-            name = e.target;
-          });
           return (
             <IconButton
               icon="add"
               size={24}
               color={tintColor}
               onPress={() => {
-                navigation.navigate("AddManageItem", { name: name });
+                navigation.navigate("AddManageItem", { name: route.name });
               }}
             />
           );

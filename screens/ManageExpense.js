@@ -70,8 +70,8 @@ const ManageExpense = ({ route, navigation }) => {
       !isNaN(expensesInput.amount) && +expensesInput.amount > 0;
     const dateIsValid = expensesInput.date.toString() !== "Invalid Date";
     const descIsValid = expensesInput.desc.trim().length > 3;
-    const categoryValid = expensesInput.desc.trim().length > 0;
-    const accountValid = expensesInput.desc.trim().length > 0;
+    const categoryValid = expensesInput.category.trim().length > 0;
+    const accountValid = expensesInput.account.trim().length > 0;
     if (
       amountIsValid &&
       dateIsValid &&

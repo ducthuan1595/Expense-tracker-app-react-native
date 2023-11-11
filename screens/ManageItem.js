@@ -1,31 +1,45 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import { CategoryStore } from "../store/categoryContext";
-import { deleteCategoryApi, fetchCategoryApi } from "../api/http";
+import {
+  deleteAccountApi,
+  deleteCategoryApi,
+  fetchCategoryApi,
+  getAccountApi,
+} from "../api/http";
 import { GlobalStyles } from "../constants/styles";
+import Loading from "../components/ui/Loading";
+import { AccountStore } from "../store/accountContext";
 
 const ManageItem = ({ name }) => {
-  const { categories, setCategories, removeCategory } = CategoryStore();
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const data = await fetchCategoryApi();
-        setCategories(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCategory();
-  }, [categories]);
+  const storeCategory = CategoryStore();
+  const { setAccount, accounts, removeAccount } = AccountStore();
+  const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
+  console.log({ name });
 
   const handleDelete = async (id) => {
     try {
-      await deleteCategoryApi(id);
-      removeCategory(id);
+      if (name === "category") {
+        await deleteCategoryApi(id);
+        storeCategory.removeCategory(id);
+      } else {
+        await deleteAccountApi(id);
+        removeAccount(id);
+      }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleEdit = async (id) => {
+    if (name === "category") {
+      navigation.navigate("AddManageItem", { name: "ChangeCategory", id: id });
+    } else {
+      navigation.navigate("AddManageItem", { name: "ChangeAccount", id: id });
     }
   };
 
@@ -42,19 +56,38 @@ const ManageItem = ({ name }) => {
           <Text style={styles.name}>{item.name}</Text>
         </View>
         <View>
-          <Ionicons
-            name="create"
-            size={24}
-            color={GlobalStyles.colors.gray700}
-          />
+          <Pressable onPress={() => handleEdit(item.id)}>
+            <Ionicons
+              name="create"
+              size={24}
+              color={GlobalStyles.colors.primary400}
+            />
+          </Pressable>
         </View>
       </View>
     );
   };
+
+  // console.log(storeCategory.categories);
+
+  let data = [];
+  if (name === "category") {
+    if (storeCategory.categories.length) {
+      data = storeCategory.categories;
+    }
+  } else {
+    if (accounts.length) {
+      data = accounts;
+    }
+  }
+  if (isLoading || data.length === 0) {
+    return <Loading />;
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={name === "category" ? categories : []}
+        data={data}
         renderItem={({ item }) => renderItem(item)}
         keyExtractor={(item) => item.id}
       />
@@ -72,7 +105,7 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 18,
     fontWeight: "bold",
-    textTransform: "capitalize",
+    // textTransform: "capitalize",
   },
   listItem: {
     flexDirection: "row",

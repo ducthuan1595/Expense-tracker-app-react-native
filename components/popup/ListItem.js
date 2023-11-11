@@ -1,19 +1,31 @@
 import React from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+} from "react-native";
 
 const ListItem = ({ items }) => {
-  const handleRender = ({ item }) => {
+  const handleAddItem = () => {};
+  const handleRender = (item) => {
     return (
       <Pressable
         onPress={handleAddItem}
         style={({ pressed }) => pressed && styles.pressed}
-      ></Pressable>
+      >
+        <View>
+          <Text>{item.name}</Text>
+        </View>
+      </Pressable>
     );
   };
   return (
     <FlatList
       data={items}
-      renderItem={handleRender}
+      renderItem={({ item }) => handleRender(item)}
       keyExtractor={(item) => item.id}
     />
   );

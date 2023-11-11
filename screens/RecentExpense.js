@@ -3,12 +3,16 @@ import { Text } from "react-native";
 import ExpenseOutput from "../components/expenses/ExpenseOutput";
 import { ExpenseStore } from "../store/context";
 import { getDateMinuteDays } from "../util/date";
-import { fetchExpenses } from "../api/http";
+import { fetchExpenses, fetchCategoryApi, getAccountApi } from "../api/http";
 import Loading from "../components/ui/Loading";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { CategoryStore } from "../store/categoryContext";
+import { AccountStore } from "../store/accountContext";
 
 const RecentExpense = () => {
   const { expenses, setExpense } = ExpenseStore();
+  const storeCategory = CategoryStore();
+  const { setAccount } = AccountStore();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -24,6 +28,29 @@ const RecentExpense = () => {
       setIsLoading(false);
     };
     getExpenses();
+  }, []);
+
+  const fetCategory = async () => {
+    try {
+      const category = await fetchCategoryApi();
+      console.log(category);
+      storeCategory.setCategories(category);
+      console.log("fetch");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const fetAccount = async () => {
+    try {
+      const account = await getAccountApi();
+      setAccount(account);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    fetCategory();
+    fetAccount();
   }, []);
 
   const handleError = () => {
