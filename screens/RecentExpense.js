@@ -3,16 +3,24 @@ import { Text } from "react-native";
 import ExpenseOutput from "../components/expenses/ExpenseOutput";
 import { ExpenseStore } from "../store/context";
 import { getDateMinuteDays } from "../util/date";
-import { fetchExpenses, fetchCategoryApi, getAccountApi } from "../api/http";
+import { fetchExpenses } from "../api/http";
 import Loading from "../components/ui/Loading";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { CategoryStore } from "../store/categoryContext";
 import { AccountStore } from "../store/accountContext";
+import {
+  fetchAccountDB,
+  fetchCategoriesExpenseDB,
+  fetchCategoryIncomeDB,
+} from "../util/database";
+import { CategoryIncomeStore } from "../store/incomeCategory";
 
 const RecentExpense = () => {
   const { expenses, setExpense } = ExpenseStore();
   const storeCategory = CategoryStore();
   const { setAccount } = AccountStore();
+  const { setCategoriesIncome } = CategoryIncomeStore();
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -32,17 +40,23 @@ const RecentExpense = () => {
 
   const fetCategory = async () => {
     try {
-      const category = await fetchCategoryApi();
-      console.log(category);
+      const category = await fetchCategoriesExpenseDB();
       storeCategory.setCategories(category);
-      console.log("fetch");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const fetchIncome = async () => {
+    try {
+      const income = await fetchCategoryIncomeDB();
+      setCategoriesIncome(income);
     } catch (err) {
       console.error(err);
     }
   };
   const fetAccount = async () => {
     try {
-      const account = await getAccountApi();
+      const account = await fetchAccountDB();
       setAccount(account);
     } catch (err) {
       console.error(err);
@@ -51,6 +65,7 @@ const RecentExpense = () => {
   useEffect(() => {
     fetCategory();
     fetAccount();
+    fetchIncome();
   }, []);
 
   const handleError = () => {

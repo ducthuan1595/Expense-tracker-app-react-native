@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../../constants/styles";
 import { getFormatDate } from "../../util/date";
 
-const ExpenseItem = ({ desc, amount, date, id }) => {
+const ExpenseItem = ({ desc, amount, date, id, account, category }) => {
   const navigation = useNavigation();
   const expenseHandler = () => {
     navigation.navigate("ManageExpense", {
@@ -19,8 +19,12 @@ const ExpenseItem = ({ desc, amount, date, id }) => {
     >
       <View style={styles.expenseItem}>
         <View>
-          <Text style={styles.desc}>{desc}</Text>
+          <Text style={styles.category}>{category}</Text>
           <Text style={styles.textBase}>{getFormatDate(date)}</Text>
+        </View>
+        <View>
+          <Text style={styles.category}>{account}</Text>
+          <Text style={styles.desc}>{desc}</Text>
         </View>
         <View style={styles.priceContainer}>
           <Text style={styles.amount}>${+amount.toFixed(2)}</Text>
@@ -50,7 +54,7 @@ const styles = StyleSheet.create({
   textBase: {
     color: GlobalStyles.colors.primary50,
   },
-  desc: {
+  category: {
     fontSize: 16,
     marginBottom: 4,
     fontWeight: "bold",
@@ -65,12 +69,15 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   amount: {
-    color: GlobalStyles.colors.primary500,
+    color: GlobalStyles.colors.error500,
     fontWeight: "bold",
     minWidth: 50,
     textAlign: "center",
   },
   pressed: {
     opacity: 0.75,
+  },
+  desc: {
+    color: GlobalStyles.colors.primary200,
   },
 });

@@ -6,7 +6,11 @@ import { useNavigation } from "@react-navigation/native";
 const HeaderPopup = ({ name, icon, size, color, setIsPopup }) => {
   const navigation = useNavigation();
   const handleEdit = () => {
-    navigation.navigate("");
+    if (name === "category") {
+      navigation.navigate("ManageCategoryExpense");
+    } else {
+      navigation.navigate("ManageAccountIncome");
+    }
   };
   return (
     <View style={styles.headers}>
@@ -55,6 +59,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 30,
     fontSize: 15,
+    textTransform: "capitalize",
   },
   button: {
     color: "white",

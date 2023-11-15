@@ -1,5 +1,13 @@
 import React, { useState, useLayoutEffect } from "react";
-import { StyleSheet, Text, View, Button, Pressable, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Pressable,
+  Alert,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
@@ -110,6 +118,9 @@ const Authentication = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Image source={require("../assets/pig.png")} style={styles.image} />
+      </View>
       <View style={styles.inputRow}>
         <PrimaryInput
           label={"Email"}
@@ -200,5 +211,13 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.5,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  imageContainer: {
+    height: 100,
+    width: 100,
   },
 });

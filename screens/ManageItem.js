@@ -4,31 +4,35 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import { CategoryStore } from "../store/categoryContext";
-import {
-  deleteAccountApi,
-  deleteCategoryApi,
-  fetchCategoryApi,
-  getAccountApi,
-} from "../api/http";
 import { GlobalStyles } from "../constants/styles";
 import Loading from "../components/ui/Loading";
 import { AccountStore } from "../store/accountContext";
+import {
+  deleteAccountDB,
+  deleteCategoryIncomeDB,
+  deleteExpenseCategory,
+} from "../util/database";
+import { CategoryIncomeStore } from "../store/incomeCategory";
 
 const ManageItem = ({ name }) => {
   const storeCategory = CategoryStore();
   const { setAccount, accounts, removeAccount } = AccountStore();
+  const { categoriesIncome, removeCategoriesIncome } = CategoryIncomeStore();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
-  console.log({ name });
 
+  // console.log({ name });
   const handleDelete = async (id) => {
     try {
-      if (name === "category") {
-        await deleteCategoryApi(id);
+      if (name === "expense_category") {
+        await deleteExpenseCategory(id);
         storeCategory.removeCategory(id);
-      } else {
-        await deleteAccountApi(id);
+      } else if (name === "account") {
+        await deleteAccountDB(id);
         removeAccount(id);
+      } else {
+        await deleteCategoryIncomeDB(id);
+        removeCategoriesIncome(id);
       }
     } catch (err) {
       console.error(err);
@@ -36,11 +40,15 @@ const ManageItem = ({ name }) => {
   };
 
   const handleEdit = async (id) => {
-    if (name === "category") {
-      navigation.navigate("AddManageItem", { name: "ChangeCategory", id: id });
-    } else {
+    setIsLoading(true);
+    if (name === "expense_category") {
+      navigation.navigate("AddManageItem", { name: "ChangeExpense", id: id });
+    } else if (name === "account") {
       navigation.navigate("AddManageItem", { name: "ChangeAccount", id: id });
+    } else {
+      navigation.navigate("AddManageItem", { name: "ChangeIncome", id: id });
     }
+    setIsLoading(false);
   };
 
   const renderItem = (item) => {
@@ -71,9 +79,13 @@ const ManageItem = ({ name }) => {
   // console.log(storeCategory.categories);
 
   let data = [];
-  if (name === "category") {
+  if (name === "expense_category") {
     if (storeCategory.categories.length) {
       data = storeCategory.categories;
+    }
+  } else if (name === "income_category") {
+    if (categoriesIncome.length) {
+      data = categoriesIncome;
     }
   } else {
     if (accounts.length) {

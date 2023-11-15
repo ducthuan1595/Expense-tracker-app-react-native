@@ -9,6 +9,7 @@ const PrimaryInput = ({
   value,
   isLogin,
   showSoftInputOnFocus,
+  editable,
 }) => {
   let inputStyes = [styles.input];
   if (textInputConfig && textInputConfig.multiline) {
@@ -28,6 +29,7 @@ const PrimaryInput = ({
           style={inputStyes}
           value={value}
           showSoftInputOnFocus={showSoftInputOnFocus === "true" ? false : true}
+          editable={editable}
         />
       </View>
     </>
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.colors.primary100,
     padding: 6,
     borderRadius: 6,
-    fontSize: 18,
+    fontSize: 16,
     color: GlobalStyles.colors.primary700,
   },
   inputMultiline: {

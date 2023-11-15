@@ -30,6 +30,13 @@ import IconButton from "./components/ui/IconButton";
 import Authentication from "./screens/Authentication";
 import { AuthStore } from "./store/authContext";
 import { useEffect, useState } from "react";
+import {
+  deleteTableExpense,
+  deleteTableIncome,
+  initAccountDB,
+  initCategoryExpense,
+  initCategoryIncomeDB,
+} from "./util/database";
 
 SplashScreen.preventAutoHideAsync();
 GoogleSignin.configure({
@@ -111,8 +118,12 @@ function ExpenseOverview() {
   );
 }
 
-function ManageCategory() {
-  return <ManageItem name={"category"} />;
+function ManageCategoryExpense() {
+  return <ManageItem name={"expense_category"} />;
+}
+
+function ManageCategoryIncome() {
+  return <ManageItem name={"income_category"} />;
 }
 
 function ManageAccount() {
@@ -147,17 +158,28 @@ function ManageItemOverview() {
       })}
     >
       <Tab.Screen
-        name="ManageCategory"
-        component={ManageCategory}
+        name="ManageCategoryExpense"
+        component={ManageCategoryExpense}
         options={{
-          title: "Manage Category",
-          tabBarLabel: "Category",
+          title: "Manage Expense",
+          tabBarLabel: "Expense",
           tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="create" size={size} color={color} />;
+            return <Ionicons name="trending-down" size={size} color={color} />;
           },
         }}
       />
 
+      <Tab.Screen
+        name="ManageCategoryIncome"
+        component={ManageCategoryIncome}
+        options={{
+          title: "Manage Income",
+          tabBarLabel: "Income",
+          tabBarIcon: ({ color, size }) => {
+            return <Ionicons name="trending-up" size={size} color={color} />;
+          },
+        }}
+      />
       <Tab.Screen
         name="ManageAccount"
         component={ManageAccount}
@@ -165,7 +187,13 @@ function ManageItemOverview() {
           title: "Manage Account",
           tabBarLabel: "Account",
           tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="card" size={size} color={color} />;
+            return (
+              <Ionicons
+                name="logo-closed-captioning"
+                size={size}
+                color={color}
+              />
+            );
           },
         }}
       />
@@ -292,6 +320,14 @@ const Root = () => {
 };
 
 export default function App() {
+  useEffect(() => {
+    // deleteTableExpense();
+    // deleteTableIncome();
+    initCategoryIncomeDB();
+    initCategoryExpense();
+    initAccountDB();
+  }, []);
+
   return (
     <>
       <StatusBar style="auto" />

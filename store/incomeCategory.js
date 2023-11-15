@@ -1,12 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
 
-const Context = createContext({
-  categories: [],
-  addCategory: (name) => {},
-  removeCategory: (categoryId) => {},
-  editCategory: (name, categoryId) => {},
-  setCategories: (categories) => {},
-});
+const Context = createContext();
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -32,38 +26,38 @@ const reducer = (state, action) => {
   }
 };
 
-const ProviderCategory = ({ children }) => {
-  const [categories, dispatch] = useReducer(reducer, []);
+const ProviderCategoryIncome = ({ children }) => {
+  const [categoriesIncome, dispatch] = useReducer(reducer, []);
 
-  const addCategory = (data) => {
+  const addCategoriesIncome = (data) => {
     dispatch({ type: "ADD", payload: data });
   };
 
-  const editCategory = (data, id) => {
+  const editCategoriesIncome = (data, id) => {
     dispatch({ type: "EDIT", payload: { id, data } });
   };
 
-  const removeCategory = (id) => {
+  const removeCategoriesIncome = (id) => {
     dispatch({ type: "DELETE", payload: id });
   };
 
-  const setCategories = (data) => {
+  const setCategoriesIncome = (data) => {
     dispatch({ type: "SET", payload: data });
   };
 
   const value = {
-    addCategory,
-    editCategory,
-    removeCategory,
-    setCategories,
-    categories,
+    addCategoriesIncome,
+    editCategoriesIncome,
+    removeCategoriesIncome,
+    setCategoriesIncome,
+    categoriesIncome,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
-export const CategoryStore = () => {
+export const CategoryIncomeStore = () => {
   return useContext(Context);
 };
 
-export default ProviderCategory;
+export default ProviderCategoryIncome;

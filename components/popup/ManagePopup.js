@@ -8,9 +8,8 @@ import { AccountStore } from "../../store/accountContext";
 const ManagePopup = ({ setIsPopup, name }) => {
   const { categories } = CategoryStore();
   const { accounts } = AccountStore();
-  console.log(categories, name);
   let data = [];
-  if (name === "Category") {
+  if (name === "category") {
     data = categories;
   } else {
     data = accounts;
@@ -26,7 +25,7 @@ const ManagePopup = ({ setIsPopup, name }) => {
           color={"white"}
           setIsPopup={setIsPopup}
         />
-        <ListItem items={categories} />
+        <ListItem items={data} name={name} setIsPopup={setIsPopup} />
       </View>
     );
   }

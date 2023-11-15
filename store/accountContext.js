@@ -9,14 +9,12 @@ const Context = createContext({
 });
 
 const reducer = (state, action) => {
-  console.log("old data", state);
   switch (action.type) {
     case "SET":
       const data = action.payload.reverse();
       return data;
     case "ADD":
       const newData = [...state, action.payload];
-      console.log("new data", newData);
       return newData;
     case "EDIT":
       const findIndexData = state.findIndex((e) => e.id === action.payload.id);
@@ -36,7 +34,6 @@ const ProviderAccount = ({ children }) => {
   const [accounts, dispatch] = useReducer(reducer, []);
 
   const addAccount = (data) => {
-    console.log("daa", data);
     dispatch({ type: "ADD", payload: data });
   };
 
@@ -49,7 +46,6 @@ const ProviderAccount = ({ children }) => {
   };
 
   const setAccount = (data) => {
-    console.log({ data });
     dispatch({ type: "SET", payload: data });
   };
 

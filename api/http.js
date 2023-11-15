@@ -18,6 +18,8 @@ export const fetchExpenses = async () => {
       amount: +res.data[key].amount,
       date: new Date(res.data[key].date),
       desc: res.data[key].desc,
+      category: res.data[key].category,
+      account: res.data[key].account,
     };
     expenses.push(expense);
   }
@@ -82,7 +84,7 @@ export const getAccountApi = async () => {
     accounts.push(account);
   }
 
-  return categories;
+  return accounts;
 };
 
 export const deleteAccountApi = async (id) => {

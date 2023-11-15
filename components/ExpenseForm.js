@@ -74,13 +74,21 @@ const ExpenseForm = ({ setExpenses, expenses, setIsPopup, setNameHeader }) => {
             value={expenses.date}
           />
         </View>
-        <Pressable onPress={handleSelectCategory.bind(null, "Category")}>
-          <Text style={styles.text}>Category</Text>
-          <View style={[styles.selectInput, styles.marginBottom]}></View>
+        <Pressable onPress={handleSelectCategory.bind(null, "category")}>
+          <PrimaryInput
+            label={"Category"}
+            style={styles.rowInput}
+            value={expenses.category}
+            editable={false}
+          />
         </Pressable>
-        <Pressable onPress={handleSelectAccount.bind(null, "Account")}>
-          <Text style={styles.text}>Account</Text>
-          <View style={styles.selectInput}></View>
+        <Pressable onPress={handleSelectAccount.bind(null, "account")}>
+          <PrimaryInput
+            label={"Account"}
+            style={styles.rowInput}
+            value={expenses.account}
+            editable={false}
+          />
         </Pressable>
         <PrimaryInput
           label={"Description"}

@@ -1,12 +1,6 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer, useState } from "react";
 
-const ExpenseContext = createContext({
-  expenses: [],
-  addExpense: ({ desc, amount, date }) => {},
-  deleteExpense: (id) => {},
-  updateExpense: (id, { desc, amount, date }) => {},
-  setExpense: (expense) => {},
-});
+const ExpenseContext = createContext();
 
 const expenseReducer = (state, action) => {
   switch (action.type) {
@@ -34,6 +28,8 @@ const expenseReducer = (state, action) => {
 
 const ExpenseProvider = ({ children }) => {
   const [expenses, dispatch] = useReducer(expenseReducer, []);
+  const [valueInputCategory, setValueInputCategory] = useState("");
+  const [valueInputAccount, setValueInputAccount] = useState("");
 
   const addExpense = (expense) => {
     dispatch({ type: "ADD", payload: expense });
@@ -55,6 +51,10 @@ const ExpenseProvider = ({ children }) => {
     deleteExpense,
     expenses,
     setExpense,
+    valueInputCategory,
+    setValueInputCategory,
+    valueInputAccount,
+    setValueInputAccount,
   };
 
   return (

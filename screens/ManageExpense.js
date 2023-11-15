@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StyleSheet, Alert, ScrollView, View } from "react-native";
 import IconButton from "../components/ui/IconButton";
 import { GlobalStyles } from "../constants/styles";
@@ -11,26 +11,43 @@ import ErrorOverlay from "../components/ui/ErrorOverlay";
 import ManagePopup from "../components/popup/ManagePopup";
 
 const ManageExpense = ({ route, navigation }) => {
+  const {
+    valueInputCategory,
+    valueInputAccount,
+    setValueInputCategory,
+    setValueInputAccount,
+  } = ExpenseStore();
+
   const expenseId = route.params?.expenseId;
   const [isLoading, setIsLoading] = useState(false);
   const [isPopup, setIsPopup] = useState(false);
   const [nameHeader, setNameHeader] = useState("");
   const [error, setError] = useState(null);
   const isEditing = !!expenseId;
-  const [expensesInput, setExpenses] = useState({
+  const [expensesInput, setExpensesInput] = useState({
     amount: "",
     date: new Date().toISOString().slice(0, 10),
-    category: "",
-    account: "",
+    category: valueInputCategory ? valueInputCategory : "",
+    account: valueInputAccount ? valueInputAccount : "",
     desc: "",
   });
 
   const { addExpense, deleteExpense, updateExpense, expenses } = ExpenseStore();
 
   useLayoutEffect(() => {
+    setExpensesInput((state) => {
+      return {
+        ...state,
+        category: valueInputCategory,
+        account: valueInputAccount,
+      };
+    });
+  }, [valueInputAccount, valueInputCategory]);
+
+  useLayoutEffect(() => {
     if (isEditing && expenseId) {
       const updateItem = expenses.find((e) => e.id === expenseId);
-      setExpenses((state) => {
+      setExpensesInput((state) => {
         return {
           ...state,
           amount: updateItem.amount.toString(),
@@ -64,21 +81,16 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   };
   const handleConfirm = async () => {
+    console.log({ expensesInput });
     setIsPopup(false);
     setIsLoading(true);
     const amountIsValid =
       !isNaN(expensesInput.amount) && +expensesInput.amount > 0;
     const dateIsValid = expensesInput.date.toString() !== "Invalid Date";
-    const descIsValid = expensesInput.desc.trim().length > 3;
     const categoryValid = expensesInput.category.trim().length > 0;
     const accountValid = expensesInput.account.trim().length > 0;
-    if (
-      amountIsValid &&
-      dateIsValid &&
-      descIsValid &&
-      categoryValid &&
-      accountValid
-    ) {
+
+    if (amountIsValid && dateIsValid && categoryValid && accountValid) {
       if (isEditing) {
         try {
           await updateExpenses(expenseId, {
@@ -89,14 +101,26 @@ const ManageExpense = ({ route, navigation }) => {
             ...expensesInput,
             date: new Date(expensesInput.date),
           });
+          setValueInputCategory("");
+          setValueInputAccount("");
           navigation.goBack();
         } catch (err) {
           setError("Could Edit expense - please try again!");
         }
       } else {
         try {
-          const id = await storeExpense(expensesInput);
-          addExpense({ ...expensesInput, id });
+          const id = await storeExpense({
+            ...expensesInput,
+            date: new Date(expensesInput.date),
+          });
+          const res = {
+            ...expensesInput,
+            date: new Date(expensesInput.date),
+            id,
+          };
+          addExpense(res);
+          setValueInputCategory("");
+          setValueInputAccount("");
           navigation.goBack();
         } catch (err) {
           setError("Could add expense - please try again!");
@@ -120,11 +144,13 @@ const ManageExpense = ({ route, navigation }) => {
     return <Loading />;
   }
 
+  // console.log({ expensesInput });
+
   return (
     <>
       <ScrollView style={styles.container}>
         <ExpenseForm
-          setExpenses={setExpenses}
+          setExpenses={setExpensesInput}
           expenses={expensesInput}
           setIsPopup={setIsPopup}
           setNameHeader={setNameHeader}
