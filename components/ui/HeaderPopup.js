@@ -9,7 +9,7 @@ const HeaderPopup = ({ name, icon, size, color, setIsPopup }) => {
     if (name === "category") {
       navigation.navigate("ManageCategoryExpense");
     } else {
-      navigation.navigate("ManageAccountIncome");
+      navigation.navigate("ManageCategoryIncome");
     }
   };
   return (

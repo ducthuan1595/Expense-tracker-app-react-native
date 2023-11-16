@@ -1,17 +1,30 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { GlobalStyles } from "../../constants/styles";
 import { getFormatDate } from "../../util/date";
+import { formatAmount } from "../../util/format";
 
-const ExpenseItem = ({ desc, amount, date, id, account, category }) => {
+const ExpenseItem = ({ desc, amount, date, id, account, category, type }) => {
   const navigation = useNavigation();
   const expenseHandler = () => {
     navigation.navigate("ManageExpense", {
       expenseId: id,
     });
   };
+
+  const typeColor = () => {
+    if (type === "expense") {
+      return { color: GlobalStyles.colors.error500, ...styles.amount };
+    } else if (type === "income") {
+      return { color: GlobalStyles.colors.income, ...styles.amount };
+    } else {
+      return { color: GlobalStyles.colors.gray500, ...styles.amount };
+    }
+  };
+
   return (
     <Pressable
       onPress={expenseHandler}
@@ -19,15 +32,19 @@ const ExpenseItem = ({ desc, amount, date, id, account, category }) => {
     >
       <View style={styles.expenseItem}>
         <View>
-          <Text style={styles.category}>{category}</Text>
+          <Text style={styles.category}>
+            {type === "transfer" ? "Transfer" : category}
+          </Text>
           <Text style={styles.textBase}>{getFormatDate(date)}</Text>
         </View>
         <View>
-          <Text style={styles.category}>{account}</Text>
+          <Text style={styles.account}>
+            {type === "transfer" ? category + " ‹-› " + account : account}
+          </Text>
           <Text style={styles.desc}>{desc}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={styles.amount}>${+amount.toFixed(2)}</Text>
+          <Text style={typeColor()}>{formatAmount(+amount)}</Text>
         </View>
       </View>
     </Pressable>
@@ -60,6 +77,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
+  account: {
+    fontSize: 13,
+    marginBottom: 4,
+    fontWeight: "400",
+    color: GlobalStyles.colors.accent500,
+  },
   priceContainer: {
     paddingHorizontal: 12,
     paddingVertical: 4,
@@ -69,7 +92,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   amount: {
-    color: GlobalStyles.colors.error500,
     fontWeight: "bold",
     minWidth: 50,
     textAlign: "center",
@@ -79,5 +101,6 @@ const styles = StyleSheet.create({
   },
   desc: {
     color: GlobalStyles.colors.primary200,
+    fontSize: 11,
   },
 });

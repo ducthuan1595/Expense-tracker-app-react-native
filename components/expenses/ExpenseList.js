@@ -7,7 +7,7 @@ const ExpenseList = ({ items }) => {
     return <ExpenseItem {...item} />;
   };
   return (
-    <View>
+    <View style={{ marginBottom: 50 }}>
       <FlatList
         data={items}
         renderItem={({ item }) => renderItem(item)}

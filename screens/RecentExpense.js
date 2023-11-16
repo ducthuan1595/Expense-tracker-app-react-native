@@ -80,16 +80,16 @@ const RecentExpense = () => {
     return <Loading />;
   }
 
-  const recentExpense = expenses.filter((e) => {
-    const today = new Date();
-    const date7DaysAgo = getDateMinuteDays(today, 7);
-    return e.date > date7DaysAgo;
-  });
+  // const recentExpense = expenses.filter((e) => {
+  //   const today = new Date();
+  //   const date7DaysAgo = getDateMinuteDays(today, 7);
+  //   return e.date > date7DaysAgo;
+  // });
 
   return (
     <ExpenseOutput
       fallBack={"No expense register recent"}
-      expenses={recentExpense}
+      expenses={expenses}
       periodName={"Last 7 Days"}
     />
   );

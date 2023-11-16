@@ -3,6 +3,7 @@ import axios from "axios";
 const URL =
   "https://react-native-a2440-default-rtdb.asia-southeast1.firebasedatabase.app";
 
+// Expense
 export const storeExpense = async (expense) => {
   const res = await axios.post(`${URL}/expenses.json`, expense);
   const id = res.data.name;
@@ -20,6 +21,7 @@ export const fetchExpenses = async () => {
       desc: res.data[key].desc,
       category: res.data[key].category,
       account: res.data[key].account,
+      type: res.data[key].type,
     };
     expenses.push(expense);
   }
@@ -36,61 +38,61 @@ export const deleteExpenses = async (id) => {
   return axios.delete(`${URL}/expenses/${id}.json`);
 };
 
-// Category
-export const addCategoryApi = async (category) => {
-  const res = await axios.post(`${URL}/category.json`, category);
-  const id = res.data.name;
-  return id;
-};
+// Income
+// export const addIncomeApi = async (data) => {
+//   const res = await axios.post(`${URL}/income.json`, data);
+//   const id = res.data.name;
+//   return id;
+// };
 
-export const fetchCategoryApi = async () => {
-  const res = await axios.get(`${URL}/category.json`);
-  const categories = [];
-  for (const key in res.data) {
-    const category = {
-      id: key,
-      name: res.data[key].name,
-    };
-    categories.push(category);
-  }
+// export const fetchIncomeApi = async () => {
+//   const res = await axios.get(`${URL}/income.json`);
+//   const incomes = [];
+//   for (const key in res.data) {
+//     const income = {
+//       id: key,
+//       name: res.data[key].name,
+//     };
+//     incomes.push(income);
+//   }
 
-  return categories;
-};
+//   return incomes;
+// };
 
-export const deleteCategoryApi = async (id) => {
-  return axios.delete(`${URL}/category/${id}.json`);
-};
+// export const deleteIncomeApi = async (id) => {
+//   return axios.delete(`${URL}/income/${id}.json`);
+// };
 
-export const updateCategoryApi = async (id, category) => {
-  console.log("api", category);
-  return axios.put(`${URL}/category/${id}.json`, category);
-};
+// export const updateIncomeApi = async (id, data) => {
+//   // console.log("api", data);
+//   return axios.put(`${URL}/income/${id}.json`, data);
+// };
 
 // Account
-export const addAccountApi = async (data) => {
-  const res = await axios.post(`${URL}/account.json`, data);
-  const id = res.data.name;
-  return id;
-};
+// export const addAccountApi = async (data) => {
+//   const res = await axios.post(`${URL}/account.json`, data);
+//   const id = res.data.name;
+//   return id;
+// };
 
-export const getAccountApi = async () => {
-  const res = await axios.get(`${URL}/account.json`);
-  const accounts = [];
-  for (const key in res.data) {
-    const account = {
-      id: key,
-      name: res.data[key].name,
-    };
-    accounts.push(account);
-  }
+// export const getAccountApi = async () => {
+//   const res = await axios.get(`${URL}/account.json`);
+//   const accounts = [];
+//   for (const key in res.data) {
+//     const account = {
+//       id: key,
+//       name: res.data[key].name,
+//     };
+//     accounts.push(account);
+//   }
 
-  return accounts;
-};
+//   return accounts;
+// };
 
-export const deleteAccountApi = async (id) => {
-  return axios.delete(`${URL}/account/${id}.json`);
-};
+// export const deleteAccountApi = async (id) => {
+//   return axios.delete(`${URL}/account/${id}.json`);
+// };
 
-export const updateAccountApi = async (id, data) => {
-  return axios.put(`${URL}/account/${id}.json`, data);
-};
+// export const updateAccountApi = async (id, data) => {
+//   return axios.put(`${URL}/account/${id}.json`, data);
+// };

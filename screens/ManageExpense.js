@@ -9,9 +9,14 @@ import { storeExpense, updateExpenses, deleteExpenses } from "../api/http";
 import Loading from "../components/ui/Loading";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import ManagePopup from "../components/popup/ManagePopup";
+import NavExpense from "../components/expenses/NavExpense";
 
 const ManageExpense = ({ route, navigation }) => {
   const {
+    addExpense,
+    deleteExpense,
+    updateExpense,
+    expenses,
     valueInputCategory,
     valueInputAccount,
     setValueInputCategory,
@@ -24,6 +29,7 @@ const ManageExpense = ({ route, navigation }) => {
   const [nameHeader, setNameHeader] = useState("");
   const [error, setError] = useState(null);
   const isEditing = !!expenseId;
+  const [titleName, setTitleName] = useState("expense");
   const [expensesInput, setExpensesInput] = useState({
     amount: "",
     date: new Date().toISOString().slice(0, 10),
@@ -31,8 +37,6 @@ const ManageExpense = ({ route, navigation }) => {
     account: valueInputAccount ? valueInputAccount : "",
     desc: "",
   });
-
-  const { addExpense, deleteExpense, updateExpense, expenses } = ExpenseStore();
 
   useLayoutEffect(() => {
     setExpensesInput((state) => {
@@ -47,6 +51,7 @@ const ManageExpense = ({ route, navigation }) => {
   useLayoutEffect(() => {
     if (isEditing && expenseId) {
       const updateItem = expenses.find((e) => e.id === expenseId);
+      setTitleName(updateItem.type);
       setExpensesInput((state) => {
         return {
           ...state,
@@ -65,6 +70,10 @@ const ManageExpense = ({ route, navigation }) => {
       title: isEditing ? "Edit Expense" : "Add Expense",
     });
   }, [navigation, isEditing]);
+
+  const handleNav = (nav) => {
+    setTitleName(nav);
+  };
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -96,10 +105,12 @@ const ManageExpense = ({ route, navigation }) => {
           await updateExpenses(expenseId, {
             ...expensesInput,
             date: new Date(expensesInput.date),
+            type: titleName,
           });
           updateExpense(expenseId, {
             ...expensesInput,
             date: new Date(expensesInput.date),
+            type: titleName,
           });
           setValueInputCategory("");
           setValueInputAccount("");
@@ -112,12 +123,15 @@ const ManageExpense = ({ route, navigation }) => {
           const id = await storeExpense({
             ...expensesInput,
             date: new Date(expensesInput.date),
+            type: titleName,
           });
           const res = {
             ...expensesInput,
             date: new Date(expensesInput.date),
+            type: titleName,
             id,
           };
+          console.log({ res });
           addExpense(res);
           setValueInputCategory("");
           setValueInputAccount("");
@@ -129,6 +143,7 @@ const ManageExpense = ({ route, navigation }) => {
       setIsLoading(false);
     } else {
       Alert.alert("Invalid input!", "Please check your input values");
+      setIsLoading(false);
     }
   };
 
@@ -148,12 +163,14 @@ const ManageExpense = ({ route, navigation }) => {
 
   return (
     <>
+      {!isEditing && <NavExpense onPress={handleNav} titleName={titleName} />}
       <ScrollView style={styles.container}>
         <ExpenseForm
           setExpenses={setExpensesInput}
           expenses={expensesInput}
           setIsPopup={setIsPopup}
           setNameHeader={setNameHeader}
+          titleName={titleName}
         />
         <View style={styles.buttons}>
           <PrimaryButton
@@ -178,7 +195,13 @@ const ManageExpense = ({ route, navigation }) => {
           </View>
         )}
       </ScrollView>
-      {isPopup && <ManagePopup setIsPopup={setIsPopup} name={nameHeader} />}
+      {isPopup && (
+        <ManagePopup
+          setIsPopup={setIsPopup}
+          name={nameHeader}
+          titleName={titleName}
+        />
+      )}
     </>
   );
 };

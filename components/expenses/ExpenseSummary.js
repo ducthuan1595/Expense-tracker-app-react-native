@@ -1,13 +1,34 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+
 import { GlobalStyles } from "../../constants/styles";
+import { formatAmount } from "../../util/format";
 
 const ExpenseSummary = ({ periodName, expenses }) => {
-  const expensesSum = expenses.reduce((a, b) => a + +b.amount, 0);
+  const expenseArr = expenses.filter((e) => e.type === "expense");
+  const incomeArr = expenses.filter((e) => e.type === "income");
+  const calcTotal = (data) => {
+    return data.reduce((a, b) => a + +b.amount, 0);
+  };
   return (
     <View style={styles.container}>
-      <Text style={styles.period}>{periodName}</Text>
-      <Text style={styles.sum}>${expensesSum.toFixed(2)}</Text>
+      <View>
+        <Text style={styles.title}>Income</Text>
+        <Text style={[styles.sum, styles.green]}>
+          {formatAmount(calcTotal(incomeArr))}
+        </Text>
+      </View>
+      <View>
+        <Text style={styles.title}>Expense</Text>
+        <Text style={[styles.sum, styles.red]}>
+          {formatAmount(calcTotal(expenseArr))}
+        </Text>
+      </View>
+      <View>
+        <Text style={styles.title}>Total</Text>
+        <Text style={styles.sum}>{formatAmount(calcTotal(expenses))}</Text>
+      </View>
+      {/* <Text style={styles.sum}>${expensesSum.toFixed(2)}</Text> */}
     </View>
   );
 };
@@ -23,13 +44,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  period: {
+  title: {
     fontSize: 12,
     color: GlobalStyles.colors.primary400,
+    textAlign: "center",
   },
   sum: {
     fontSize: 16,
     fontWeight: "bold",
-    color: GlobalStyles.colors.primary500,
+    textAlign: "center",
+  },
+  red: {
+    color: GlobalStyles.colors.error500,
+  },
+  green: {
+    color: GlobalStyles.colors.income,
   },
 });

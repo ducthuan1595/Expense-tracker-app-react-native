@@ -32,6 +32,7 @@ const ExpenseProvider = ({ children }) => {
   const [valueInputAccount, setValueInputAccount] = useState("");
 
   const addExpense = (expense) => {
+    console.log({ expense });
     dispatch({ type: "ADD", payload: expense });
   };
   const updateExpense = (id, expense) => {
@@ -45,6 +46,7 @@ const ExpenseProvider = ({ children }) => {
     dispatch({ type: "SET", payload: expenses });
   };
 
+  // console.log({ expenses });
   const values = {
     addExpense,
     updateExpense,

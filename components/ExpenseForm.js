@@ -9,7 +9,13 @@ import {
 import PrimaryInput from "./ui/PrimaryInput";
 import { GlobalStyles } from "../constants/styles";
 
-const ExpenseForm = ({ setExpenses, expenses, setIsPopup, setNameHeader }) => {
+const ExpenseForm = ({
+  setExpenses,
+  expenses,
+  setIsPopup,
+  setNameHeader,
+  titleName,
+}) => {
   const handleAmount = (e) => {
     setIsPopup(false);
     setExpenses((state) => {
@@ -50,7 +56,7 @@ const ExpenseForm = ({ setExpenses, expenses, setIsPopup, setNameHeader }) => {
   return (
     <>
       <View style={styles.form}>
-        <Text style={styles.title}>Your Expense</Text>
+        <Text style={styles.title}>Your {titleName}</Text>
         <View style={styles.inputRow}>
           <PrimaryInput
             label={"Amount"}
@@ -76,7 +82,7 @@ const ExpenseForm = ({ setExpenses, expenses, setIsPopup, setNameHeader }) => {
         </View>
         <Pressable onPress={handleSelectCategory.bind(null, "category")}>
           <PrimaryInput
-            label={"Category"}
+            label={titleName === "transfer" ? "From" : "Category"}
             style={styles.rowInput}
             value={expenses.category}
             editable={false}
@@ -84,7 +90,7 @@ const ExpenseForm = ({ setExpenses, expenses, setIsPopup, setNameHeader }) => {
         </Pressable>
         <Pressable onPress={handleSelectAccount.bind(null, "account")}>
           <PrimaryInput
-            label={"Account"}
+            label={titleName === "transfer" ? "To" : "Account"}
             style={styles.rowInput}
             value={expenses.account}
             editable={false}
@@ -122,11 +128,12 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   title: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
-    marginVertical: 24,
+    marginVertical: 20,
+    textTransform: "capitalize",
   },
   text: {
     fontSize: 12,
