@@ -1,36 +1,97 @@
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { Text } from "react-native";
+import ExpenseOutput from "../components/expenses/ExpenseOutput";
+import { ExpenseStore } from "../store/context";
+import { getDateMinuteDays } from "../util/date";
+import { fetchExpenses } from "../api/http";
+import Loading from "../components/ui/Loading";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { CategoryStore } from "../store/categoryContext";
+import { AccountStore } from "../store/accountContext";
+import {
+  fetchAccountDB,
+  fetchCategoriesExpenseDB,
+  fetchCategoryIncomeDB,
+} from "../util/database";
+import { CategoryIncomeStore } from "../store/incomeCategory";
 
-import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native";
-import Svg, { Path } from "react-native-svg";
+const AllExpense = ({ navigation }) => {
+  const { expenses, setExpense } = ExpenseStore();
+  const storeCategory = CategoryStore();
+  const { setAccount } = AccountStore();
+  const { setCategoriesIncome } = CategoryIncomeStore();
 
-function AllExpense() {
-  const data = [
-    { quarter: 1, earnings: 13000 },
-    { quarter: 2, earnings: 16500 },
-    { quarter: 3, earnings: 14250 },
-    { quarter: 4, earnings: 19000 },
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const getExpenses = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchExpenses();
+        setExpense(data);
+      } catch (err) {
+        setError("Could not fetch expenses!");
+      }
+      setIsLoading(false);
+    };
+    getExpenses();
+  }, []);
+
+  const fetCategory = async () => {
+    try {
+      const category = await fetchCategoriesExpenseDB();
+      storeCategory.setCategories(category);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const fetchIncome = async () => {
+    try {
+      const income = await fetchCategoryIncomeDB();
+      setCategoriesIncome(income);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const fetAccount = async () => {
+    try {
+      const account = await fetchAccountDB();
+      setAccount(account);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    fetCategory();
+    fetAccount();
+    fetchIncome();
+  }, []);
+
+  const handleError = () => {
+    setError(null);
+  };
+
+  if (error) {
+    return <ErrorOverlay message={error} onPress={handleError} />;
+  }
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  // const recentExpense = expenses.filter((e) => {
+  //   const today = new Date();
+  //   const date7DaysAgo = getDateMinuteDays(today, 7);
+  //   return e.date > date7DaysAgo;
+  // });
 
   return (
-    <View style={styles.container}>
-      <Svg width={20} height={20} viewBox="0 0 20 20">
-        <Path d="M16.993 6.667H3.227l6.883 6.883 6.883-6.883z" fill="#000" />
-      </Svg>
-      <VictoryChart>
-        <VictoryBar data={data} x={"quarter"} y={"earnings"} />
-      </VictoryChart>
-    </View>
+    <ExpenseOutput
+      fallBack={"No expense register recent"}
+      expenses={expenses}
+    />
   );
-}
+};
 
 export default AllExpense;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5fcff",
-  },
-});

@@ -21,10 +21,10 @@ import { getHeaderTitle } from "@react-navigation/elements";
 import ContextProvider from "./store";
 
 import ManageExpense from "./screens/ManageExpense";
-import RecentExpense from "./screens/RecentExpense";
+import AllExpense from "./screens/AllExpense";
 import ManageItem from "./screens/ManageItem";
 import AddManageItem from "./screens/AddManageItem";
-import AllExpense from "./screens/AllExpense";
+import ExpenseChart from "./screens/ExpenseChart";
 import { GlobalStyles } from "./constants/styles";
 import IconButton from "./components/ui/IconButton";
 import Authentication from "./screens/Authentication";
@@ -37,6 +37,8 @@ import {
   initCategoryExpense,
   initCategoryIncomeDB,
 } from "./util/database";
+
+import SelectPicker from "./components/ui/SelectPicker";
 
 SplashScreen.preventAutoHideAsync();
 GoogleSignin.configure({
@@ -67,7 +69,7 @@ const IconDrawer = () => {
 function ExpenseOverview() {
   return (
     <Tab.Navigator
-      screenOptions={({ navigation }) => ({
+      screenOptions={({ navigation, route }) => ({
         headerStyle: {
           backgroundColor: GlobalStyles.colors.primary500,
         },
@@ -78,25 +80,28 @@ function ExpenseOverview() {
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
         headerLeft: (props) => <IconDrawer {...props} />,
         headerRight: ({ tintColor }) => {
-          return (
-            <IconButton
-              icon="add"
-              size={24}
-              color={tintColor}
-              onPress={() => {
-                navigation.navigate("ManageExpense");
-              }}
-            />
-          );
+          if (route.name === "AllExpense") {
+            return (
+              <IconButton
+                icon="add"
+                size={24}
+                color={tintColor}
+                onPress={() => {
+                  navigation.navigate("ManageExpense");
+                }}
+              />
+            );
+          }
+          return <SelectPicker />;
         },
       })}
     >
       <Tab.Screen
-        name="RecentExpense"
-        component={RecentExpense}
+        name="AllExpense"
+        component={AllExpense}
         options={{
-          title: "Recent Expense",
-          tabBarLabel: "Recent",
+          title: "All Expense",
+          tabBarLabel: "Expense",
           tabBarIcon: ({ color, size }) => {
             return <Ionicons name="hourglass" size={size} color={color} />;
           },
@@ -104,13 +109,13 @@ function ExpenseOverview() {
       />
 
       <Tab.Screen
-        name="AllExpense"
-        component={AllExpense}
+        name="ExpenseChart"
+        component={ExpenseChart}
         options={{
-          title: "All Expense",
-          tabBarLabel: "All Expense",
+          title: "Expense Chart",
+          tabBarLabel: "Chart",
           tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="calendar" size={size} color={color} />;
+            return <Ionicons name="bar-chart" size={size} color={color} />;
           },
         }}
       />

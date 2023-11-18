@@ -10,7 +10,7 @@ import {
   getFollowYear,
 } from "../../util/date";
 
-const ExpenseOutput = ({ expenses, periodName, fallBack }) => {
+const ExpenseOutput = ({ expenses, fallBack }) => {
   const [typeFollow, setTypeFollow] = useState("weekly");
   const handleFollow = (type) => {
     setTypeFollow(type);
@@ -112,7 +112,7 @@ const ExpenseOutput = ({ expenses, periodName, fallBack }) => {
           </Text>
         </Pressable>
       </View>
-      <ExpenseSummary expenses={loadData()} periodName={periodName} />
+      <ExpenseSummary expenses={loadData()} />
       {content}
     </View>
   );

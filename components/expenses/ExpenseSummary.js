@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
 import { formatAmount } from "../../util/format";
 
-const ExpenseSummary = ({ periodName, expenses }) => {
+const ExpenseSummary = ({ expenses }) => {
   const expenseArr = expenses.filter((e) => e.type === "expense");
   const incomeArr = expenses.filter((e) => e.type === "income");
   const calcTotal = (data) => {

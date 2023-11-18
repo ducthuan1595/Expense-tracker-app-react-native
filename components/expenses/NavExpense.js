@@ -2,64 +2,32 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { GlobalStyles } from "../../constants/styles";
+import NavItem from "../ui/NavItem";
 
 const NavExpense = ({ onPress, titleName }) => {
   return (
     <View style={styles.nav}>
-      <Pressable
-        onPress={() => onPress("expense")}
-        style={({ pressed }) => pressed && styles.pressed}
+      <NavItem
+        onPress={onPress}
+        style={styles.horizon}
+        isNav={titleName === "expense"}
       >
-        <Text
-          style={[
-            styles.title,
-            {
-              color:
-                titleName === "expense"
-                  ? GlobalStyles.colors.error500
-                  : GlobalStyles.colors.primary200,
-            },
-          ]}
-        >
-          Expense
-        </Text>
-      </Pressable>
-      <Pressable
-        onPress={() => onPress("income")}
-        style={({ pressed }) => pressed && styles.pressed}
+        Expense
+      </NavItem>
+      <NavItem
+        onPress={onPress}
+        isNav={titleName === "income"}
+        style={styles.horizon}
       >
-        <Text
-          style={[
-            styles.title,
-            {
-              color:
-                titleName === "income"
-                  ? GlobalStyles.colors.error500
-                  : GlobalStyles.colors.primary200,
-            },
-          ]}
-        >
-          Income
-        </Text>
-      </Pressable>
-      <Pressable
-        onPress={() => onPress("transfer")}
-        style={({ pressed }) => pressed && styles.pressed}
+        Income
+      </NavItem>
+      <NavItem
+        onPress={onPress}
+        isNav={titleName === "transfer"}
+        style={styles.horizon}
       >
-        <Text
-          style={[
-            styles.title,
-            {
-              color:
-                titleName === "transfer"
-                  ? GlobalStyles.colors.error500
-                  : GlobalStyles.colors.primary200,
-            },
-          ]}
-        >
-          Transfer
-        </Text>
-      </Pressable>
+        Transfer
+      </NavItem>
     </View>
   );
 };
@@ -71,20 +39,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: GlobalStyles.colors.primary800,
-    paddingHorizontal: 28,
+    paddingHorizontal: 32,
     paddingTop: 8,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "500",
-    paddingHorizontal: 30,
+  horizon: {
+    paddingHorizontal: 28,
     paddingVertical: 4,
-    borderRadius: 8,
-    color: GlobalStyles.colors.primary200,
-    backgroundColor: GlobalStyles.colors.primary50,
-    width: "100%",
-  },
-  pressed: {
-    opacity: 0.6,
   },
 });
