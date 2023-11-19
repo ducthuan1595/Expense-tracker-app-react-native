@@ -14,12 +14,14 @@ import {
   fetchCategoryIncomeDB,
 } from "../util/database";
 import { CategoryIncomeStore } from "../store/incomeCategory";
+import { AuthStore } from "../store/authContext";
 
 const AllExpense = ({ navigation }) => {
   const { expenses, setExpense } = ExpenseStore();
   const storeCategory = CategoryStore();
   const { setAccount } = AccountStore();
   const { setCategoriesIncome } = CategoryIncomeStore();
+  const { user, isAuthenticated } = AuthStore();
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,13 +31,16 @@ const AllExpense = ({ navigation }) => {
       setIsLoading(true);
       try {
         const data = await fetchExpenses();
-        setExpense(data);
+        const checkAuthentication = data.filter((i) => i.user === user.email);
+        setExpense(checkAuthentication);
       } catch (err) {
         setError("Could not fetch expenses!");
       }
       setIsLoading(false);
     };
-    getExpenses();
+    if (isAuthenticated) {
+      getExpenses();
+    }
   }, []);
 
   const fetCategory = async () => {

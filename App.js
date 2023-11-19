@@ -40,6 +40,7 @@ import {
 
 import SelectPicker from "./components/ui/SelectPicker";
 import AnualYear from "./screens/AnualYear";
+import User from "./screens/User";
 
 SplashScreen.preventAutoHideAsync();
 GoogleSignin.configure({
@@ -147,7 +148,7 @@ function ManageItemOverview() {
           backgroundColor: GlobalStyles.colors.primary500,
         },
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
-        headerLeft: (props) => <IconDrawer {...props} />,
+        // headerLeft: (props) => <IconDrawer {...props} />,
         headerRight: ({ tintColor }) => {
           return (
             <IconButton
@@ -206,6 +207,7 @@ function ManageItemOverview() {
   );
 }
 
+// login
 function CustomerDrawerContent(props) {
   const navigation = useNavigation();
   const { logout } = AuthStore();
@@ -255,20 +257,21 @@ function DrawNavigation() {
         name="ExpenseOverview"
         component={ExpenseOverview}
         options={{
+          title: "Home",
           headerShown: false,
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="list" color={color} size={size} />
+            <Ionicons name="home" color={color} size={size} />
           ),
         }}
       />
       <Drawer.Screen
-        name="ManageItem"
-        component={ManageItemOverview}
+        name="User"
+        component={User}
         options={{
-          title: "Manage Item",
+          title: "User",
           headerShown: false,
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="create" color={color} size={size} />
+            <Ionicons name="person-sharp" color={color} size={size} />
           ),
         }}
       />
@@ -379,7 +382,17 @@ export default function App() {
               name="AnnualYear"
               component={AnualYear}
               options={{
-                presentation: "modal",
+                title: "Annual statistical",
+              }}
+            />
+            <Stack.Screen
+              name="ManageItem"
+              component={ManageItemOverview}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ color, size }) => (
+                  <Ionicons name="create" color={color} size={size} />
+                ),
               }}
             />
           </Stack.Navigator>

@@ -22,6 +22,8 @@ export const fetchExpenses = async () => {
       category: res.data[key].category,
       account: res.data[key].account,
       type: res.data[key].type,
+      year: res.data[key].year,
+      user: res.data[key].user,
     };
     expenses.push(expense);
   }

@@ -141,7 +141,9 @@ const ExpenseOutput = ({ fallBack }) => {
           style={({ pressed }) => {
             pressed && styles.pressed;
           }}
-          onPress={handleFollow.bind(null, "total")}
+          onPress={() => {
+            navigation.navigate("AnnualYear");
+          }}
         >
           <Text
             style={[

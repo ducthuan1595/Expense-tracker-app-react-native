@@ -14,16 +14,16 @@ const HeaderTime = ({
     const date = new Date();
     if (valueSelect === "monthly") {
       if (date.getMonth() + 1 === currTimeValue) {
-        return { opacity: 0.35 };
+        return { opacity: 0 };
       }
     } else if (valueSelect === "yearly") {
       if (date.getFullYear() === currTimeValue) {
-        return { opacity: 0.35 };
+        return { opacity: 0 };
       } else {
         return { opacity: 1 };
       }
     } else if (valueSelect === "weekly") {
-      return { opacity: 0.35 };
+      return { opacity: 0 };
     }
   };
 
@@ -45,7 +45,7 @@ const HeaderTime = ({
           name="chevron-back"
           size={20}
           color="#fff"
-          style={valueSelect === "weekly" && { opacity: 0.35 }}
+          style={valueSelect === "weekly" && { opacity: 0 }}
         />
       </Pressable>
       <Text style={styles.time}>

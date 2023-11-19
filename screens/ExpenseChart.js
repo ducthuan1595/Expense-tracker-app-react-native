@@ -120,7 +120,6 @@ function ExpenseChart({ navigation }) {
     };
     let num = 0;
 
-    // console.log({ newExpense });
     if (title === "expense") {
       const total = calcTotal(expenseArr);
       const newExpense = objectChart(expenseArr);
@@ -161,9 +160,9 @@ function ExpenseChart({ navigation }) {
     return data.map((a) => a.color);
   };
 
-  if (data.length === 0) {
-    return <Text style={styles.infoText}>No expense register</Text>;
-  }
+  // if (data.length === 0) {
+  //   return <Text style={styles.infoText}>No expense register</Text>;
+  // }
 
   return (
     <ScrollView>

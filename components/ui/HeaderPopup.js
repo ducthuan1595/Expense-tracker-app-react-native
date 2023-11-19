@@ -6,11 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 const HeaderPopup = ({ name, icon, size, color, setIsPopup }) => {
   const navigation = useNavigation();
   const handleEdit = () => {
-    if (name === "category") {
-      navigation.navigate("ManageCategoryExpense");
-    } else {
-      navigation.navigate("ManageCategoryIncome");
-    }
+    navigation.navigate("ManageItem");
   };
   return (
     <View style={styles.headers}>

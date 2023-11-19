@@ -383,9 +383,9 @@ export const deleteTableExpense = () => {
 };
 export const deleteTableIncome = () => {
   const promise = new Promise((resolve, reject) => {
-    categoryExpenseDB.transaction((tx) => {
+    categoryIncomeDB.transaction((tx) => {
       tx.executeSql(
-        "DROP TABLE IF EXISTS accounts",
+        "DROP TABLE IF EXISTS categories_income",
         [],
         () => resolve(),
         (_, err) => reject(err)

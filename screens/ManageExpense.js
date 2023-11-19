@@ -10,6 +10,7 @@ import Loading from "../components/ui/Loading";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import ManagePopup from "../components/popup/ManagePopup";
 import NavExpense from "../components/expenses/NavExpense";
+import { AuthStore } from "../store/authContext";
 
 const ManageExpense = ({ route, navigation }) => {
   const {
@@ -22,6 +23,7 @@ const ManageExpense = ({ route, navigation }) => {
     setValueInputCategory,
     setValueInputAccount,
   } = ExpenseStore();
+  const { user, isAuthenticated } = AuthStore();
 
   const expenseId = route.params?.expenseId;
   const [isLoading, setIsLoading] = useState(false);
@@ -99,18 +101,28 @@ const ManageExpense = ({ route, navigation }) => {
     const categoryValid = expensesInput.category.trim().length > 0;
     const accountValid = expensesInput.account.trim().length > 0;
 
-    if (amountIsValid && dateIsValid && categoryValid && accountValid) {
+    if (
+      amountIsValid &&
+      dateIsValid &&
+      categoryValid &&
+      accountValid &&
+      isAuthenticated
+    ) {
       if (isEditing) {
         try {
           await updateExpenses(expenseId, {
             ...expensesInput,
             date: new Date(expensesInput.date),
             type: titleName,
+            year: new Date(expensesInput.date).getFullYear(),
+            user: user.email,
           });
           updateExpense(expenseId, {
             ...expensesInput,
             date: new Date(expensesInput.date),
             type: titleName,
+            year: new Date(expensesInput.date).getFullYear(),
+            user: user.email,
           });
           setValueInputCategory("");
           setValueInputAccount("");
@@ -124,14 +136,18 @@ const ManageExpense = ({ route, navigation }) => {
             ...expensesInput,
             date: new Date(expensesInput.date),
             type: titleName,
+            year: new Date(expensesInput.date).getFullYear(),
+            user: user.email,
           });
           const res = {
             ...expensesInput,
             date: new Date(expensesInput.date),
             type: titleName,
+            year: new Date(expensesInput.date).getFullYear(),
+            user: user.email,
             id,
           };
-          console.log({ res });
+          // console.log({ user });
           addExpense(res);
           setValueInputCategory("");
           setValueInputAccount("");

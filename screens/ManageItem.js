@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -13,6 +13,7 @@ import {
   deleteExpenseCategory,
 } from "../util/database";
 import { CategoryIncomeStore } from "../store/incomeCategory";
+import IconButton from "../components/ui/IconButton";
 
 const ManageItem = ({ name }) => {
   const storeCategory = CategoryStore();
@@ -20,6 +21,23 @@ const ManageItem = ({ name }) => {
   const { categoriesIncome, removeCategoriesIncome } = CategoryIncomeStore();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: ({ tintColor }) => {
+        return (
+          <IconButton
+            icon="md-arrow-back"
+            size={24}
+            color={tintColor}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        );
+      },
+    });
+  });
 
   // console.log({ name });
   const handleDelete = async (id) => {
