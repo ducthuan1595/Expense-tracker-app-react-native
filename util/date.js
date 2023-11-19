@@ -20,17 +20,16 @@ export function getFollowWeek(date, data) {
 }
 
 export function getFollowMonth(date, data) {
-  const month = date.getMonth();
   const result = data.filter((e) => {
-    return +getFormatDate(e.date).slice(5, 7) === month;
+    return +getFormatDate(e.date).slice(5, 7) === date;
   });
   return result;
 }
 
 export function getFollowYear(date, data) {
-  const year = date.getFullYear();
   const result = data.filter((e) => {
-    return +getFormatDate(e.date).slice(0, 4) === year;
+    console.log(+getFormatDate(e.date).slice(0, 4));
+    return +getFormatDate(e.date).slice(0, 4) === date;
   });
   return result;
 }

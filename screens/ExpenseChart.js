@@ -1,5 +1,17 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Text, View, StyleSheet, FlatList, ScrollView } from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  Pressable,
+} from "react-native";
 
 import {
   VictoryPie,
@@ -13,24 +25,86 @@ import { ExpenseStore } from "../store/context";
 import NavItem from "../components/ui/NavItem";
 import { colorsArray } from "../constants/color";
 import ListChar from "../components/expenses/ListChar";
-import { formatAmount } from "../util/format";
+import { getFollowMonth, getFollowWeek, getFollowYear } from "../util/date";
+import { GlobalStyles } from "../constants/styles";
+import HeaderTime from "../components/ui/HeaderTime";
 
-function ExpenseChart() {
-  const { expenses } = ExpenseStore();
+function ExpenseChart({ navigation }) {
+  const { expenses, valueSelectChart, setValueSelectChart } = ExpenseStore();
   const [data, setData] = useState([]);
   const [total, setTotal] = useState({
     income: 0,
     expense: 0,
   });
   const [title, setTitle] = useState("expense");
+  const [currTimeLabel, setCurrTimeLabel] = useState("m");
+  const [currTimeValue, setCurrTimeValue] = useState(0);
+  // valueSelectChart === "Monthly"
+  //   ? new Date().getMonth() + 1
+  //   : new Date().getFullYear()
+  // );
+
+  useEffect(() => {
+    const day = new Date();
+    const date = day.getDate();
+    const month = day.getMonth() + 1;
+    const year = day.getFullYear();
+    setCurrTimeValue((state) => {
+      if (valueSelectChart === "monthly") {
+        setCurrTimeLabel("m");
+        return month;
+      } else if (valueSelectChart === "yearly") {
+        setCurrTimeLabel("y");
+        return year;
+      } else {
+        setCurrTimeLabel(`from ${day.getDate() - 7}`);
+        return date;
+      }
+    });
+  }, [valueSelectChart]);
 
   const calcTotal = (data) => {
     return data.reduce((a, b) => a + +b.amount, 0);
   };
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => {
+        return (
+          <HeaderTime
+            valueSelect={valueSelectChart}
+            currTimeLabel={currTimeLabel}
+            currTimeValue={currTimeValue}
+            setCurrTimeValue={setCurrTimeValue}
+          />
+        );
+      },
+    });
+  });
+
+  if (valueSelectChart === "total") {
+    setValueSelectChart("monthly");
+    navigation.navigate("AnnualYear");
+  }
+
+  const loadData = () => {
+    const today = new Date();
+    if (valueSelectChart === "weekly") {
+      const data = getFollowWeek(today, expenses);
+      return data;
+    } else if (valueSelectChart === "monthly") {
+      const data = getFollowMonth(currTimeValue, expenses);
+      return data;
+    } else if (valueSelectChart === "yearly") {
+      const data = getFollowYear(currTimeValue, expenses);
+      return data;
+    }
+    return expenses;
+  };
+
   useEffect(() => {
-    const expenseArr = expenses.filter((e) => e.type === "expense");
-    const incomeArr = expenses.filter((e) => e.type === "income");
+    const expenseArr = loadData().filter((e) => e.type === "expense");
+    const incomeArr = loadData().filter((e) => e.type === "income");
     setTotal({
       expense: calcTotal(expenseArr),
       income: calcTotal(incomeArr),
@@ -81,11 +155,15 @@ function ExpenseChart() {
       newArr.sort((a, b) => b.y - a.y);
       setData(newArr);
     }
-  }, [expenses, title]);
+  }, [expenses, title, valueSelectChart, currTimeValue, currTimeLabel]);
 
   const getColor = () => {
     return data.map((a) => a.color);
   };
+
+  if (data.length === 0) {
+    return <Text style={styles.infoText}>No expense register</Text>;
+  }
 
   return (
     <ScrollView>
@@ -136,11 +214,14 @@ function ExpenseChart() {
         {/* </VictoryScatter> */}
       </View>
       <View>
-        <FlatList
+        {data.map((i) => (
+          <ListChar item={i} key={i.x} />
+        ))}
+        {/* <FlatList
           data={data}
           keyExtractor={(item) => item.category}
           renderItem={({ item }) => <ListChar item={item} />}
-        />
+        /> */}
       </View>
     </ScrollView>
   );
@@ -163,11 +244,17 @@ const styles = StyleSheet.create({
   nav: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 24,
+    paddingHorizontal: 8,
     paddingTop: 8,
   },
   horizon: {
     paddingHorizontal: 40,
     paddingVertical: 4,
+  },
+  infoText: {
+    color: GlobalStyles.colors.error500,
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 32,
   },
 });

@@ -30,6 +30,7 @@ const ExpenseProvider = ({ children }) => {
   const [expenses, dispatch] = useReducer(expenseReducer, []);
   const [valueInputCategory, setValueInputCategory] = useState("");
   const [valueInputAccount, setValueInputAccount] = useState("");
+  const [valueSelectChart, setValueSelectChart] = useState("Monthly");
 
   const addExpense = (expense) => {
     console.log({ expense });
@@ -57,6 +58,8 @@ const ExpenseProvider = ({ children }) => {
     setValueInputCategory,
     valueInputAccount,
     setValueInputAccount,
+    valueSelectChart,
+    setValueSelectChart,
   };
 
   return (

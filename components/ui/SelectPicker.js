@@ -1,36 +1,62 @@
 import { useState } from "react";
-import { View, SectionList, StyleSheet, StatusBar, Text } from "react-native";
+import {
+  View,
+  SectionList,
+  StyleSheet,
+  StatusBar,
+  Text,
+  Pressable,
+} from "react-native";
+import ChartPopup from "../popup/ChartPopup";
+import { GlobalStyles } from "../../constants/styles";
+import { ExpenseStore } from "../../store/context";
 
-const DATA = [
-  {
-    title: "Month",
-    data: ["weekly", "Month", "Year"],
-  },
-];
+const DATA = ["weekly", "monthly", "yearly", "total"];
 
 const SelectPicker = () => {
-  const [selectedValue, setSelectedValue] = useState("");
-  return <View></View>;
+  const { valueSelectChart } = ExpenseStore();
+  const [isPopup, setIsPopup] = useState(false);
+
+  const showPopup = () => {
+    setIsPopup(!isPopup);
+  };
+
+  return (
+    <>
+      <View>
+        <Pressable
+          onPress={showPopup}
+          style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+        >
+          <Text style={styles.text}>{valueSelectChart}</Text>
+        </Pressable>
+      </View>
+      {isPopup && <ChartPopup data={DATA} setIsPopup={setIsPopup} />}
+    </>
+  );
 };
 
 export default SelectPicker;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    marginHorizontal: 16,
+    height: 26,
+    borderWidth: 1,
+    borderColor: GlobalStyles.colors.primary50,
+    marginRight: 24,
+    borderRadius: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 12,
   },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
+  text: {
+    color: "#fff",
+    textTransform: "capitalize",
   },
   header: {
     fontSize: 32,
     backgroundColor: "#fff",
   },
-  title: {
-    fontSize: 24,
+  pressed: {
+    opacity: 0.6,
   },
 });

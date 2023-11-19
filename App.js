@@ -39,6 +39,7 @@ import {
 } from "./util/database";
 
 import SelectPicker from "./components/ui/SelectPicker";
+import AnualYear from "./screens/AnualYear";
 
 SplashScreen.preventAutoHideAsync();
 GoogleSignin.configure({
@@ -60,7 +61,7 @@ const IconDrawer = () => {
       style={{ marginLeft: 24 }}
     >
       <Text>
-        <Ionicons name="list" color={"white"} size={24} />;
+        <Ionicons name="list" color={"white"} size={24} />
       </Text>
     </Pressable>
   );
@@ -112,7 +113,6 @@ function ExpenseOverview() {
         name="ExpenseChart"
         component={ExpenseChart}
         options={{
-          title: "Expense Chart",
           tabBarLabel: "Chart",
           tabBarIcon: ({ color, size }) => {
             return <Ionicons name="bar-chart" size={size} color={color} />;
@@ -371,6 +371,13 @@ export default function App() {
             <Stack.Screen
               name="AddManageItem"
               component={AddManageItem}
+              options={{
+                presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="AnnualYear"
+              component={AnualYear}
               options={{
                 presentation: "modal",
               }}

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { View, FlatList, StyleSheet, Text, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import ExpenseSummary from "./ExpenseSummary";
 import ExpenseList from "./ExpenseList";
+import HeaderTime from "../ui/HeaderTime";
 import { GlobalStyles } from "../../constants/styles";
 import {
   getDateMinuteDays,
@@ -9,12 +12,53 @@ import {
   getFollowWeek,
   getFollowYear,
 } from "../../util/date";
+import { ExpenseStore } from "../../store/context";
 
-const ExpenseOutput = ({ expenses, fallBack }) => {
+const ExpenseOutput = ({ fallBack }) => {
+  const navigation = useNavigation();
+  const { expenses } = ExpenseStore();
+
   const [typeFollow, setTypeFollow] = useState("weekly");
+  const [currTimeLabel, setCurrTimeLabel] = useState("m");
+  const [currTimeValue, setCurrTimeValue] = useState(0);
   const handleFollow = (type) => {
     setTypeFollow(type);
   };
+
+  useEffect(() => {
+    const day = new Date();
+    const date = day.getDate();
+    const month = day.getMonth() + 1;
+    const year = day.getFullYear();
+    setCurrTimeValue((state) => {
+      if (typeFollow === "monthly") {
+        setCurrTimeLabel("m");
+        return month;
+      } else if (typeFollow === "yearly") {
+        setCurrTimeLabel("y");
+        return year;
+      } else {
+        setCurrTimeLabel(`from ${day.getDate() - 7}`);
+        return date;
+      }
+    });
+  }, [typeFollow]);
+
+  // Set header follow time
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => {
+        return (
+          <HeaderTime
+            valueSelect={typeFollow}
+            currTimeLabel={currTimeLabel}
+            currTimeValue={currTimeValue}
+            setCurrTimeValue={setCurrTimeValue}
+          />
+        );
+      },
+    });
+  });
 
   const loadData = () => {
     const today = new Date();
@@ -22,10 +66,10 @@ const ExpenseOutput = ({ expenses, fallBack }) => {
       const data = getFollowWeek(today, expenses);
       return data;
     } else if (typeFollow === "monthly") {
-      const data = getFollowMonth(today, expenses);
+      const data = getFollowMonth(currTimeValue, expenses);
       return data;
     } else if (typeFollow === "yearly") {
-      const data = getFollowYear(today, expenses);
+      const data = getFollowYear(currTimeValue, expenses);
       return data;
     }
     return expenses;

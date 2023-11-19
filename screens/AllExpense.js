@@ -86,12 +86,7 @@ const AllExpense = ({ navigation }) => {
   //   return e.date > date7DaysAgo;
   // });
 
-  return (
-    <ExpenseOutput
-      fallBack={"No expense register recent"}
-      expenses={expenses}
-    />
-  );
+  return <ExpenseOutput fallBack={"No expense register"} />;
 };
 
 export default AllExpense;
