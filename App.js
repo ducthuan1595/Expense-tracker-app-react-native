@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -207,13 +207,37 @@ function ManageItemOverview() {
   );
 }
 
-// login
+// customer drawer
 function CustomerDrawerContent(props) {
+  const { user } = AuthStore();
   const navigation = useNavigation();
   const { logout } = AuthStore();
 
   return (
     <DrawerContentScrollView {...props}>
+      <View
+        style={{
+          paddingHorizontal: 12,
+        }}
+      >
+        <Image
+          source={
+            user?.photo ? { uri: user?.photo } : require("./assets/account.png")
+          }
+          style={{ height: 100, width: 100 }}
+        />
+        <View>
+          {user?.name && <Text style={{ marginTop: 2 }}>{user.name}</Text>}
+          <Text style={{ marginTop: 2 }}>{user.email}</Text>
+        </View>
+      </View>
+      <Text
+        style={{
+          borderBottomColor: GlobalStyles.colors.primary50,
+          borderBottomWidth: 1,
+          marginBottom: 20,
+        }}
+      ></Text>
       <DrawerItemList {...props} />
       <DrawerItem
         label={"Logout"}
@@ -265,13 +289,13 @@ function DrawNavigation() {
         }}
       />
       <Drawer.Screen
-        name="User"
-        component={User}
+        name="Settings"
+        component={ExpenseOverview}
         options={{
-          title: "User",
+          title: "Settings",
           headerShown: false,
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="person-sharp" color={color} size={size} />
+            <Ionicons name="settings" color={color} size={size} />
           ),
         }}
       />

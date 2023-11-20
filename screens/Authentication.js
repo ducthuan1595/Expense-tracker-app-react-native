@@ -68,12 +68,13 @@ const Authentication = () => {
       } else {
         try {
           const data = await loginApi(valueInput.email, valueInput.password);
-          console.log({ data });
+          // console.log({ data });
           const result = {
             email: data.email,
             name: data.name,
             photo: data?.photo,
             token: data.idToken,
+            id: data.localId,
           };
           login(result);
           clearInputValue();
@@ -91,13 +92,16 @@ const Authentication = () => {
 
   const handleLoginWithGoogle = async () => {
     const userInfo = await loginWithGoogle();
+    // console.log(userInfo.user);
     const result = {
       email: userInfo.user.email,
       name: userInfo.user.name,
       photo: userInfo.user?.photo,
       token: userInfo.idToken,
+      id: userInfo.user.id,
     };
     login(result);
+    // await signUpApi(userInfo.user.email, userInfo.user.id);
     navigation.navigate("DrawNavigation", { screen: "DrawNavigation" });
   };
 

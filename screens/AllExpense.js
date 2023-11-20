@@ -31,7 +31,7 @@ const AllExpense = ({ navigation }) => {
       setIsLoading(true);
       try {
         const data = await fetchExpenses();
-        const checkAuthentication = data.filter((i) => i.user === user.email);
+        const checkAuthentication = data.filter((i) => i.user === user.id);
         setExpense(checkAuthentication);
       } catch (err) {
         setError("Could not fetch expenses!");

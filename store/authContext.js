@@ -14,6 +14,7 @@ function AuthContextProvider({ children }) {
     name: "",
     photo: "",
     token: "",
+    id: "",
   });
 
   const login = async (infoUser) => {
@@ -27,6 +28,7 @@ function AuthContextProvider({ children }) {
       name: "",
       photo: "",
       token: "",
+      id: "",
     });
     await AsyncStorage.removeItem("infoUser");
   };
@@ -38,6 +40,7 @@ function AuthContextProvider({ children }) {
     logout,
     login,
   };
+  // console.log({ user });
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
 

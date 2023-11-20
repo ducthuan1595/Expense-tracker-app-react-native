@@ -92,7 +92,7 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   };
   const handleConfirm = async () => {
-    console.log({ expensesInput });
+    console.log({ user });
     setIsPopup(false);
     setIsLoading(true);
     const amountIsValid =
@@ -115,14 +115,14 @@ const ManageExpense = ({ route, navigation }) => {
             date: new Date(expensesInput.date),
             type: titleName,
             year: new Date(expensesInput.date).getFullYear(),
-            user: user.email,
+            user: user.id,
           });
           updateExpense(expenseId, {
             ...expensesInput,
             date: new Date(expensesInput.date),
             type: titleName,
             year: new Date(expensesInput.date).getFullYear(),
-            user: user.email,
+            user: user.id,
           });
           setValueInputCategory("");
           setValueInputAccount("");
@@ -137,14 +137,14 @@ const ManageExpense = ({ route, navigation }) => {
             date: new Date(expensesInput.date),
             type: titleName,
             year: new Date(expensesInput.date).getFullYear(),
-            user: user.email,
+            user: user.id,
           });
           const res = {
             ...expensesInput,
             date: new Date(expensesInput.date),
             type: titleName,
             year: new Date(expensesInput.date).getFullYear(),
-            user: user.email,
+            user: user.id,
             id,
           };
           // console.log({ user });
