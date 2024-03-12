@@ -92,9 +92,9 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   };
   const handleConfirm = async () => {
-    console.log({ expensesInput });
     setIsPopup(false);
     setIsLoading(true);
+    expensesInput.amount = expensesInput.amount.replace(/\./g, '');
     const amountIsValid =
       !isNaN(expensesInput.amount) && +expensesInput.amount > 0;
     const dateIsValid = expensesInput.date.toString() !== "Invalid Date";
@@ -147,7 +147,6 @@ const ManageExpense = ({ route, navigation }) => {
             user: user.email,
             id,
           };
-          // console.log({ user });
           addExpense(res);
           setValueInputCategory("");
           setValueInputAccount("");
@@ -175,7 +174,6 @@ const ManageExpense = ({ route, navigation }) => {
     return <Loading />;
   }
 
-  // console.log({ expensesInput });
 
   return (
     <>

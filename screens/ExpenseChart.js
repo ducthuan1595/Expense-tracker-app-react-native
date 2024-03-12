@@ -25,9 +25,12 @@ import { ExpenseStore } from "../store/context";
 import NavItem from "../components/ui/NavItem";
 import { colorsArray } from "../constants/color";
 import ListChar from "../components/expenses/ListChar";
-import { getFollowMonth, getFollowWeek, getFollowYear } from "../util/date";
 import { GlobalStyles } from "../constants/styles";
 import HeaderTime from "../components/ui/HeaderTime";
+import TotalTypeIncome from "../components/charts/TotalTypeIncome";
+
+import { getFollowMonth, getFollowWeek, getFollowYear } from "../util/date";
+import { getStartOfWeek } from "../util/date";
 
 function ExpenseChart({ navigation }) {
   const { expenses, valueSelectChart, setValueSelectChart } = ExpenseStore();
@@ -39,10 +42,6 @@ function ExpenseChart({ navigation }) {
   const [title, setTitle] = useState("expense");
   const [currTimeLabel, setCurrTimeLabel] = useState("m");
   const [currTimeValue, setCurrTimeValue] = useState(0);
-  // valueSelectChart === "Monthly"
-  //   ? new Date().getMonth() + 1
-  //   : new Date().getFullYear()
-  // );
 
   useEffect(() => {
     const day = new Date();
@@ -50,14 +49,14 @@ function ExpenseChart({ navigation }) {
     const month = day.getMonth() + 1;
     const year = day.getFullYear();
     setCurrTimeValue((state) => {
-      if (valueSelectChart === "monthly") {
+      if (valueSelectChart.toLowerCase() === "monthly") {
         setCurrTimeLabel("m");
         return month;
-      } else if (valueSelectChart === "yearly") {
+      } else if (valueSelectChart.toLowerCase() === "yearly") {
         setCurrTimeLabel("y");
         return year;
       } else {
-        setCurrTimeLabel(`from ${day.getDate() - 7}`);
+        setCurrTimeLabel(`from ${getStartOfWeek(day).getDate()}`);
         return date;
       }
     });
@@ -80,7 +79,7 @@ function ExpenseChart({ navigation }) {
         );
       },
     });
-  });
+  }, [valueSelectChart, currTimeLabel, currTimeValue, setCurrTimeValue]);
 
   if (valueSelectChart === "total") {
     setValueSelectChart("monthly");
@@ -154,15 +153,15 @@ function ExpenseChart({ navigation }) {
       newArr.sort((a, b) => b.y - a.y);
       setData(newArr);
     }
-  }, [expenses, title, valueSelectChart, currTimeValue, currTimeLabel]);
+  }, [title, valueSelectChart, currTimeValue, currTimeLabel]);
 
   const getColor = () => {
     return data.map((a) => a.color);
   };
 
-  // if (data.length === 0) {
-  //   return <Text style={styles.infoText}>No expense register</Text>;
-  // }
+  const toggleExpense = (e) => {
+    setTitle(e)
+  }
 
   return (
     <ScrollView>
@@ -172,7 +171,7 @@ function ExpenseChart({ navigation }) {
       {/* <VictoryScatter> */}
       <View style={styles.nav}>
         <NavItem
-          onPress={(e) => setTitle(e)}
+          onPress={toggleExpense}
           isNav={title === "expense"}
           style={styles.horizon}
           total={total.expense}
@@ -180,7 +179,7 @@ function ExpenseChart({ navigation }) {
           Expense
         </NavItem>
         <NavItem
-          onPress={(e) => setTitle(e)}
+          onPress={toggleExpense}
           isNav={title === "income"}
           style={styles.horizon}
           total={total.income}
@@ -190,6 +189,7 @@ function ExpenseChart({ navigation }) {
       </View>
       <View style={styles.chart}>
         <VictoryPie
+          key={data}
           data={data}
           x={"x"}
           y={"y"}
@@ -212,6 +212,9 @@ function ExpenseChart({ navigation }) {
         />
         {/* </VictoryScatter> */}
       </View>
+      {title == 'income' && 
+        <TotalTypeIncome data={loadData().filter((e) => e.type === "income")} />      
+      }
       <View>
         {data.map((i) => (
           <ListChar item={i} key={i.x} />

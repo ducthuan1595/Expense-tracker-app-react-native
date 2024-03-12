@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
 import * as SplashScreen from "expo-splash-screen";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+// import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 import { getHeaderTitle } from "@react-navigation/elements";
 
@@ -40,13 +40,13 @@ import {
 
 import SelectPicker from "./components/ui/SelectPicker";
 import AnualYear from "./screens/AnualYear";
-import User from "./screens/User";
+import TodoList from "./screens/TodoList";
 
 SplashScreen.preventAutoHideAsync();
-GoogleSignin.configure({
-  webClientId:
-    "300384576511-1cfq6psoqtub50pck22es3nr3adtfcai.apps.googleusercontent.com",
-});
+// GoogleSignin.configure({
+//   webClientId:
+//     "300384576511-1cfq6psoqtub50pck22es3nr3adtfcai.apps.googleusercontent.com",
+// });
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -103,7 +103,10 @@ function ExpenseOverview() {
         component={AllExpense}
         options={{
           title: "All Expense",
-          tabBarLabel: "Expense",
+          tabBarLabel: "Transaction",
+          tabBarLabelStyle: {
+            paddingBottom: 5
+          },
           tabBarIcon: ({ color, size }) => {
             return <Ionicons name="hourglass" size={size} color={color} />;
           },
@@ -115,6 +118,9 @@ function ExpenseOverview() {
         component={ExpenseChart}
         options={{
           tabBarLabel: "Chart",
+          tabBarLabelStyle: {
+            paddingBottom: 5
+          },
           tabBarIcon: ({ color, size }) => {
             return <Ionicons name="bar-chart" size={size} color={color} />;
           },
@@ -207,19 +213,42 @@ function ManageItemOverview() {
   );
 }
 
-// login
 function CustomerDrawerContent(props) {
+  const { user } = AuthStore();
   const navigation = useNavigation();
   const { logout } = AuthStore();
 
   return (
     <DrawerContentScrollView {...props}>
+      <View
+        style={{
+          paddingHorizontal: 12,
+        }}
+      >
+        <Image
+          source={
+            user?.photo ? { uri: user?.photo } : require("./assets/account.png")
+          }
+          style={{ height: 100, width: 100 }}
+        />
+        <View>
+          {user?.name && <Text style={{ marginTop: 2 }}>{user.name}</Text>}
+          <Text style={{ marginTop: 2 }}>{user.email}</Text>
+        </View>
+      </View>
+      <Text
+        style={{
+          borderBottomColor: GlobalStyles.colors.primary50,
+          borderBottomWidth: 1,
+          marginBottom: 20,
+        }}
+      ></Text>
       <DrawerItemList {...props} />
       <DrawerItem
         label={"Logout"}
         onPress={async () => {
           logout();
-          await GoogleSignin.signOut();
+          // await GoogleSignin.signOut();
           navigation.navigate("Navigation");
         }}
         labelStyle={{ color: GlobalStyles.colors.error500 }}
@@ -246,6 +275,7 @@ function DrawNavigation() {
         drawerInactiveTintColor: GlobalStyles.colors.primary500,
         drawerActiveTintColor: "#351401",
         drawerActiveBackgroundColor: "#e4baa1",
+        drawerHideStatusBarOnOpen: false,
         drawerItemStyle: {
           fontSize: 80,
           color: "red",
@@ -265,10 +295,10 @@ function DrawNavigation() {
         }}
       />
       <Drawer.Screen
-        name="User"
-        component={User}
+        name="Todo"
+        component={TodoList}
         options={{
-          title: "User",
+          title: "Todo",
           headerShown: false,
           drawerIcon: ({ color, size }) => (
             <Ionicons name="person-sharp" color={color} size={size} />

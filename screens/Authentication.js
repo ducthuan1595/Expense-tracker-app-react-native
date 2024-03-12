@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
+// import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
 import PrimaryInput from "../components/ui/PrimaryInput";
 import { GlobalStyles } from "../constants/styles";
@@ -68,7 +68,6 @@ const Authentication = () => {
       } else {
         try {
           const data = await loginApi(valueInput.email, valueInput.password);
-          console.log({ data });
           const result = {
             email: data.email,
             name: data.name,
@@ -89,17 +88,17 @@ const Authentication = () => {
     }
   };
 
-  const handleLoginWithGoogle = async () => {
-    const userInfo = await loginWithGoogle();
-    const result = {
-      email: userInfo.user.email,
-      name: userInfo.user.name,
-      photo: userInfo.user?.photo,
-      token: userInfo.idToken,
-    };
-    login(result);
-    navigation.navigate("DrawNavigation", { screen: "DrawNavigation" });
-  };
+  // const handleLoginWithGoogle = async () => {
+  //   const userInfo = await loginWithGoogle();
+  //   const result = {
+  //     email: userInfo.user.email,
+  //     name: userInfo.user.name,
+  //     photo: userInfo.user?.photo,
+  //     token: userInfo.idToken,
+  //   };
+  //   login(result);
+  //   navigation.navigate("DrawNavigation", { screen: "DrawNavigation" });
+  // };
 
   if (errorMessage) {
     return (
@@ -169,10 +168,9 @@ const Authentication = () => {
         </Pressable>
       </View>
       <Text style={{ color: GlobalStyles.colors.primary50 }}>Or</Text>
-      <Pressable onPress={handleLoginWithGoogle} style={{ marginVertical: 20 }}>
+      {/* <Pressable onPress={handleLoginWithGoogle} style={{ marginVertical: 20 }}>
         <GoogleSigninButton />
-        {/* <Text>Login</Text> */}
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 };

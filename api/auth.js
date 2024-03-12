@@ -1,13 +1,13 @@
 import axios from "axios";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+// import {
+//   GoogleSignin,
+//   statusCodes,
+// } from "@react-native-google-signin/google-signin";
 
-GoogleSignin.configure({
-  webClientId:
-    "300384576511-1cfq6psoqtub50pck22es3nr3adtfcai.apps.googleusercontent.com",
-});
+// GoogleSignin.configure({
+//   webClientId:
+//     "300384576511-1cfq6psoqtub50pck22es3nr3adtfcai.apps.googleusercontent.com",
+// });
 
 const API_KEY = "AIzaSyDOQYVx5oeWJ2ZhAyp85oD8mjnF2zO7ago";
 const authenticate = async (mode, email, password) => {
@@ -17,30 +17,18 @@ const authenticate = async (mode, email, password) => {
     password,
     returnSecureToken: true,
   });
-  // console.log(res);
   return res.data;
 };
 
-export const loginWithGoogle = async () => {
-  try {
-    await GoogleSignin.hasPlayServices();
-    const userInfo = await GoogleSignin.signIn();
-    // await GoogleSignin.signOut();
-    // console.log({ userInfo });
-    return userInfo;
-  } catch (error) {
-    console.log(error);
-    // if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //   // user cancelled the login flow
-    // } else if (error.code === statusCodes.IN_PROGRESS) {
-    //   // operation (e.g. sign in) is in progress already
-    // } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //   // play services not available or outdated
-    // } else {
-    //   // some other error happened
-    // }
-  }
-};
+// export const loginWithGoogle = async () => {
+//   try {
+//     await GoogleSignin.hasPlayServices();
+//     const userInfo = await GoogleSignin.signIn();
+//     return userInfo;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const signUpApi = (email, password) => {
   return authenticate("signUp", email, password);

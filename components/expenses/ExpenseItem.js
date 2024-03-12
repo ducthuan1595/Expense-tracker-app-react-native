@@ -21,7 +21,17 @@ const ExpenseItem = ({ desc, amount, date, id, account, category, type }) => {
     } else if (type === "income") {
       return { color: GlobalStyles.colors.income, ...styles.amount };
     } else {
-      return { color: GlobalStyles.colors.gray500, ...styles.amount };
+      return { color: GlobalStyles.colors.accent500, ...styles.amount };
+    }
+  };
+
+  const colorStyle = () => {
+    if (type == "expense") {
+      return { color: GlobalStyles.colors.error500, fontStyle: 'italic'};
+    } else if (type == "income") {
+      return { color: GlobalStyles.colors.income, fontStyle: 'italic'};
+    } else {
+      return { color: GlobalStyles.colors.accent500, fontStyle: 'italic'};
     }
   };
 
@@ -35,7 +45,7 @@ const ExpenseItem = ({ desc, amount, date, id, account, category, type }) => {
           <Text style={styles.category}>
             {type === "transfer" ? "Transfer" : category}
           </Text>
-          <Text style={styles.textBase}>{getFormatDate(date)}</Text>
+          <Text style={colorStyle()}>{getFormatDate(date)}</Text>
         </View>
         <View>
           <Text style={styles.account}>
@@ -44,7 +54,7 @@ const ExpenseItem = ({ desc, amount, date, id, account, category, type }) => {
           <Text style={styles.desc}>{desc}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={typeColor()}>{formatAmount(+amount)}</Text>
+          <Text style={typeColor()}>$ {formatAmount(+amount)}</Text>
         </View>
       </View>
     </Pressable>
@@ -68,9 +78,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 0.4,
   },
-  textBase: {
-    color: GlobalStyles.colors.primary50,
-  },
   category: {
     fontSize: 16,
     marginBottom: 4,
@@ -81,7 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 4,
     fontWeight: "400",
-    color: GlobalStyles.colors.accent500,
+    color: '#cad82f',
   },
   priceContainer: {
     paddingHorizontal: 12,

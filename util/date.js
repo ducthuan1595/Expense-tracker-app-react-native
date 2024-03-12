@@ -1,6 +1,6 @@
 export function getFormatDate(date) {
   return `${date.getFullYear()}-${
-    date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : "0" + date.getMonth() + 1
+    date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1)
   }-${date.getDate() >= 10 ? date.getDate() : "0" + date.getDate()}`;
 }
 
@@ -13,19 +13,20 @@ export function getDateMinuteDays(date, days) {
 }
 
 export function getFollowWeek(date, data) {
-  const daysOfWeek = [0, 2, 3, 4, 5, 6, 7];
-  const day = date.getDate() - 7;
+  const startOfWeek = getStartOfWeek(date);
+  const endOfWeek = getEndOfWeek(date);
   const result = data.filter((e) => {
-    // console.log(getFormatDate(e.date));
-    // console.log(getFormatDate(e.date).slice(0, 4));
-    return +getFormatDate(e.date).slice(8, 10) > day;
+    const getDay = new Date(e.date).getDate();
+    if(getDay <= endOfWeek.getDate() && getDay >= startOfWeek.getDate()) {
+      return e
+    }
   });
   return result;
 }
 
 export function getFollowMonth(date, data) {
   const result = data.filter((e) => {
-    return +getFormatDate(e.date).slice(5, 7) === +date;
+    return +getFormatDate(e.date).slice(5, 7) == +date;
   });
   return result;
 }
@@ -38,3 +39,20 @@ export function getFollowYear(date, data) {
   // console.log({ result });
   return result;
 }
+
+export function getStartOfWeek(date) {
+  const now = new Date(date);
+  const day = now.getDay();
+  const diff = now.getDate() - day + (day == 0 ? -6 : 1);
+  return new Date(now.setDate(diff));
+}
+
+export function getEndOfWeek(date) {
+  const now = new Date(date);
+  const day = now.getDay();
+  const diff = now.getDate() + 6 - day;
+  return new Date(now.setDate(diff));
+}
+
+
+

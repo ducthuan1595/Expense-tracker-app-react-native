@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { GlobalStyles } from "../../constants/styles";
+import { getEndOfWeek } from "../../util/date";
 
 const HeaderTime = ({
   currTimeValue,
@@ -12,17 +13,18 @@ const HeaderTime = ({
 }) => {
   const checkInValid = () => {
     const date = new Date();
-    if (valueSelect === "monthly") {
+    if (valueSelect.toLowerCase() === "monthly") {
       if (date.getMonth() + 1 === currTimeValue) {
         return { opacity: 0 };
       }
-    } else if (valueSelect === "yearly") {
+    } else if (valueSelect.toLowerCase() === "yearly") {
       if (date.getFullYear() === currTimeValue) {
         return { opacity: 0 };
       } else {
         return { opacity: 1 };
       }
-    } else if (valueSelect === "weekly") {
+    } else if (valueSelect.toLowerCase() === "weekly") {
+      setCurrTimeValue(getEndOfWeek(date).getDate());
       return { opacity: 0 };
     }
   };
@@ -33,7 +35,7 @@ const HeaderTime = ({
         style={({ pressed }) => pressed && styles.pressed}
         onPress={() => {
           setCurrTimeValue((state) => {
-            if (valueSelect === "monthly" || valueSelect === "yearly") {
+            if ((valueSelect.toLowerCase() === "monthly" || valueSelect.toLowerCase() === "yearly") && state > 1 ) {
               return state - 1;
             } else {
               return state;
@@ -45,7 +47,7 @@ const HeaderTime = ({
           name="chevron-back"
           size={20}
           color="#fff"
-          style={valueSelect === "weekly" && { opacity: 0 }}
+          style={valueSelect.toLowerCase() === "weekly" && { opacity: 0 }}
         />
       </Pressable>
       <Text style={styles.time}>
@@ -55,13 +57,13 @@ const HeaderTime = ({
         style={({ pressed }) => pressed && styles.pressed}
         onPress={() =>
           setCurrTimeValue((state) => {
-            if (valueSelect === "monthly") {
+            if (valueSelect.toLowerCase() === "monthly") {
               if (state < new Date().getMonth() + 1) {
                 return state + 1;
               } else {
                 return state;
               }
-            } else if (valueSelect === "yearly") {
+            } else if (valueSelect.toLowerCase() === "yearly") {
               if (state < new Date().getFullYear()) {
                 return state + 1;
               } else {

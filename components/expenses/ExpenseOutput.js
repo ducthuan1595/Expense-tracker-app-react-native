@@ -11,6 +11,8 @@ import {
   getFollowMonth,
   getFollowWeek,
   getFollowYear,
+  getEndOfWeek,
+  getStartOfWeek
 } from "../../util/date";
 import { ExpenseStore } from "../../store/context";
 
@@ -38,7 +40,7 @@ const ExpenseOutput = ({ fallBack }) => {
         setCurrTimeLabel("y");
         return year;
       } else {
-        setCurrTimeLabel(`from ${day.getDate() - 7}`);
+        setCurrTimeLabel(`from ${getStartOfWeek(day).getDate()}`);
         return date;
       }
     });

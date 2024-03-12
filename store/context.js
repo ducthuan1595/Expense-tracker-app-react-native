@@ -8,7 +8,7 @@ const expenseReducer = (state, action) => {
       const data = action.payload.reverse();
       return data;
     case "ADD":
-      return [...state, action.payload];
+      return [action.payload, ...state];
     case "DELETE":
       return state.filter((e) => e.id !== action.payload);
     case "UPDATE":
@@ -33,7 +33,6 @@ const ExpenseProvider = ({ children }) => {
   const [valueSelectChart, setValueSelectChart] = useState("Monthly");
 
   const addExpense = (expense) => {
-    console.log({ expense });
     dispatch({ type: "ADD", payload: expense });
   };
   const updateExpense = (id, expense) => {

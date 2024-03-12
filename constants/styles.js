@@ -9,9 +9,9 @@ export const GlobalStyles = {
     primary800: "#2a0c70",
     accent500: "#f7bc0c",
     error50: "#fcc4e4",
-    error500: "#9b095c",
+    error500: "#d2087a",
     gray500: "#39324a",
     gray700: "#221c30",
-    income: "#1b7f01",
+    income: "#25a804",
   },
 };

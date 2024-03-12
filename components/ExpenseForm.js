@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -6,8 +6,12 @@ import {
   TouchableWithoutFeedback,
   Pressable,
 } from "react-native";
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import {Calendar, LocaleConfig} from 'react-native-calendars';
+
 import PrimaryInput from "./ui/PrimaryInput";
 import { GlobalStyles } from "../constants/styles";
+import { formatInput, formatAmount } from "../util/format";
 
 const ExpenseForm = ({
   setExpenses,
@@ -16,24 +20,28 @@ const ExpenseForm = ({
   setNameHeader,
   titleName,
 }) => {
+  
+  const [selected, setSelected] = useState(expenses.date);
+  const [isShowDate, setIsShowDate] = useState(false);
+
+  useEffect(() => {
+    setSelected(expenses.date)
+  }, [expenses.date])
+  
   const handleAmount = (e) => {
     setIsPopup(false);
     setExpenses((state) => {
       return {
         ...state,
-        amount: +e,
+        amount: formatInput(e)
       };
     });
   };
-  const handleDate = (e) => {
+  const handleDate = () => {
     setIsPopup(false);
-    setExpenses((state) => {
-      return {
-        ...state,
-        date: new Date(e),
-      };
-    });
+    setIsShowDate(true);
   };
+
   const handleDesc = (e) => {
     setIsPopup(false);
     setExpenses((state) => {
@@ -65,21 +73,37 @@ const ExpenseForm = ({
               onChangeText: handleAmount,
               onPressIn: () => setIsPopup(false),
             }}
-            style={styles.rowInput}
-            value={expenses.amount.toString()}
+            style={[styles.rowInput, styles.minWidth]}
+            value={formatAmount(expenses.amount)}
           />
-          <PrimaryInput
-            label={"Date"}
-            textInputConfig={{
-              // keyboardType: "decimal-pad",
-              onChangeText: handleDate,
-              placeholder: "YYYY-MM-DD",
-              maxLength: 10,
-            }}
-            style={styles.rowInput}
-            value={expenses.date}
-          />
+          <Pressable onPress={handleDate}>
+            <PrimaryInput
+              label={"Date"}
+              style={[styles.rowInput, styles.minWidth]}
+              value={selected}
+              editable={false}
+            />
+          </Pressable>
         </View>
+        {isShowDate && 
+          <View style={styles.popupDate}>
+            <Calendar
+              onDayPress={day => {
+                setIsShowDate(false)
+                setSelected(day.dateString);
+                setExpenses((state) => {
+                  return {
+                    ...state,
+                    date: day.dateString,
+                  };
+                });
+              }}
+              markedDates={{
+                [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
+              }}
+            />
+          </View>
+        }
         <Pressable onPress={handleSelectCategory.bind(null, "category")}>
           <PrimaryInput
             label={titleName === "transfer" ? "From" : "Category"}
@@ -124,7 +148,11 @@ const styles = StyleSheet.create({
   rowInput: {
     flex: 1,
   },
+  minWidth: {
+    minWidth: '48%'
+  },
   form: {
+    position: 'relative',
     marginTop: 40,
   },
   title: {
@@ -148,4 +176,12 @@ const styles = StyleSheet.create({
   marginBottom: {
     marginBottom: 8,
   },
+  popupDate: {
+    position: 'absolute',
+    top: '35%',
+    right: 0,
+    left: 0,
+    elevation: 100,
+    zIndex: 100
+  }
 });

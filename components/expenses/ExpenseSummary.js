@@ -26,7 +26,7 @@ const ExpenseSummary = ({ expenses }) => {
       </View>
       <View>
         <Text style={styles.title}>Total</Text>
-        <Text style={styles.sum}>{formatAmount(calcTotal(expenses))}</Text>
+        <Text style={styles.sum}>{formatAmount(calcTotal(incomeArr) - calcTotal(expenseArr))}</Text>
       </View>
       {/* <Text style={styles.sum}>${expensesSum.toFixed(2)}</Text> */}
     </View>
