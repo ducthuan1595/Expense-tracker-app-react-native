@@ -3,6 +3,7 @@ import ExpenseProvider from "./context";
 import ProviderCategory from "./categoryContext";
 import ProviderAccount from "./accountContext";
 import ProviderCategoryIncome from "./incomeCategory";
+import ProviderTodo from "./todo/todoList";
 
 export default function ContextProvider({ children }) {
   return (
@@ -10,7 +11,9 @@ export default function ContextProvider({ children }) {
       <ExpenseProvider>
         <ProviderAccount>
           <ProviderCategoryIncome>
-            <ProviderCategory>{children}</ProviderCategory>
+            <ProviderTodo>
+              <ProviderCategory>{children}</ProviderCategory>
+            </ProviderTodo>
           </ProviderCategoryIncome>
         </ProviderAccount>
       </ExpenseProvider>

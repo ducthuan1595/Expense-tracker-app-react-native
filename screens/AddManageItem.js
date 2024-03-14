@@ -2,12 +2,6 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import PrimaryInput from "../components/ui/PrimaryInput";
 import PrimaryButton from "../components/ui/PrimaryButton";
-import {
-  addAccountApi,
-  addCategoryApi,
-  updateAccountApi,
-  updateCategoryApi,
-} from "../api/http";
 import { CategoryStore } from "../store/categoryContext";
 import Loading from "../components/ui/Loading";
 import ErrorOverlay from "../components/ui/ErrorOverlay";

@@ -65,3 +65,16 @@ export const colorsArray = [
   "violet",
   "wheat",
 ];
+
+export const bgColors = [
+  'hsl(188, 32%, 76%)',
+  '#F3E7D7',
+  '#dae8f9',
+  '#fce1e2',
+  '#e3f5d2',
+  '#e6fcd3',
+  '#f9e6c9',
+  '#ffe8c5',
+  '#ffd9dd',
+  '#daccf9'
+]

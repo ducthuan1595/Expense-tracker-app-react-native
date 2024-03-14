@@ -33,10 +33,8 @@ export function getFollowMonth(date, data) {
 
 export function getFollowYear(date, data) {
   const result = data.filter((e) => {
-    // console.log(+getFormatDate(e.date).slice(0, 4));
     return e.year === +date;
   });
-  // console.log({ result });
   return result;
 }
 

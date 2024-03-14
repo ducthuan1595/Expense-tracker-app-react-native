@@ -10,7 +10,7 @@ import {
   DrawerItemList,
   createDrawerNavigator,
 } from "@react-navigation/drawer";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons  } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
 import * as SplashScreen from "expo-splash-screen";
@@ -36,11 +36,13 @@ import {
   initAccountDB,
   initCategoryExpense,
   initCategoryIncomeDB,
+  initTodo,
 } from "./util/database";
 
 import SelectPicker from "./components/ui/SelectPicker";
 import AnualYear from "./screens/AnualYear";
 import TodoList from "./screens/TodoList";
+import ManagerTodo from "./components/todoList/ManagerTodo";
 
 SplashScreen.preventAutoHideAsync();
 // GoogleSignin.configure({
@@ -68,6 +70,7 @@ const IconDrawer = () => {
   );
 };
 
+// TRANSACTION
 function ExpenseOverview() {
   return (
     <Tab.Navigator
@@ -128,6 +131,64 @@ function ExpenseOverview() {
       />
     </Tab.Navigator>
   );
+}
+
+// TODO LIST
+function ManageTodoList () {
+  return (
+    <Tab.Navigator
+      screenOptions={({ navigation, route }) => ({
+        headerStyle: {
+          backgroundColor: GlobalStyles.colors.primary500,
+        },
+        headerTintColor: "#fff",
+        tabBarStyle: {
+          backgroundColor: GlobalStyles.colors.primary500,
+        },
+        tabBarActiveTintColor: GlobalStyles.colors.accent500,
+        headerLeft: (props) => <IconDrawer {...props} />,
+        headerRight: ({ tintColor }) => {
+          return (
+            <IconButton
+              icon="add-circle"
+              size={24}
+              color={tintColor}
+              onPress={() => {
+                navigation.navigate("ManageTodo");
+              }}
+            />
+          );
+        },
+      })}
+    >
+      <Tab.Screen
+        name="TodoList"
+        component={TodoList}
+        options={{
+          tabBarLabel: "Todo List",
+          tabBarLabelStyle: {
+            paddingBottom: 5
+          },
+          tabBarIcon: ({ color, size }) => {
+            return <Ionicons name="list" size={size} color={color} />
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Chart"
+        component={TodoList}
+        options={{
+          tabBarLabel: "Chart",
+          tabBarLabelStyle: {
+            paddingBottom: 5
+          },
+          tabBarIcon: ({ color, size }) => {
+            return <Ionicons name="bar-chart" size={size} color={color} />;
+          },
+        }}
+      />
+    </Tab.Navigator>
+  )
 }
 
 function ManageCategoryExpense() {
@@ -296,7 +357,7 @@ function DrawNavigation() {
       />
       <Drawer.Screen
         name="Todo"
-        component={TodoList}
+        component={ManageTodoList}
         options={{
           title: "Todo",
           headerShown: false,
@@ -358,12 +419,16 @@ const Root = () => {
 };
 
 export default function App() {
+
+  // INITIAL VALUE
   useEffect(() => {
     // deleteTableExpense();
     // deleteTableIncome();
+    
     initCategoryIncomeDB();
     initCategoryExpense();
     initAccountDB();
+    initTodo();
   }, []);
 
   return (
@@ -423,6 +488,13 @@ export default function App() {
                 drawerIcon: ({ color, size }) => (
                   <Ionicons name="create" color={color} size={size} />
                 ),
+              }}
+            />
+             <Stack.Screen
+              name="ManageTodo"
+              component={ManagerTodo}
+              options={{
+                title: 'Manage Todo'
               }}
             />
           </Stack.Navigator>

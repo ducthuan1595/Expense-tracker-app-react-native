@@ -3,6 +3,7 @@ import * as SQLite from "expo-sqlite";
 const categoryExpenseDB = SQLite.openDatabase("categories_expense.db");
 const categoryIncomeDB = SQLite.openDatabase("categories_income.db");
 const accountDB = SQLite.openDatabase("accounts.db");
+const todoDB = SQLite.openDatabase("todoList.db");
 
 // Expense
 const categoriesExpenseInit = () => {
@@ -394,3 +395,88 @@ export const deleteTableIncome = () => {
   });
   return promise;
 };
+
+
+// TODO LIST
+export const initTodo = () => {
+  const promise = new Promise((resolve, reject) => {
+    todoDB.transaction((tx) => {
+      tx.executeSql(
+        `CREATE TABLE IF NOT EXISTS todoList (
+          id INTEGER PRIMARY KEY NOT NULL,
+          name TEXT UNIQUE NOT NULL
+        )`,
+        [],
+        (_, res) => {
+          resolve(res);
+        },
+        (_, error) => reject(error)
+      );
+    });
+  });
+
+  return promise;
+};
+
+export const addTodo = (name) => {
+  const promise = new Promise((resolve, reject) => {
+    todoDB.transaction((tx) => {
+      tx.executeSql(`
+        INSERT INTO todoList (name) VALUES (?)`,
+        [name],
+        (_, res) => resolve(res.insertId),
+        (_, err) => reject(err)
+      )
+    })
+  });
+  return promise
+}
+
+export const updateTodo = (name, id) => {
+  const promise = new Promise((resolve, reject) => {
+    todoDB.transaction((tx) => {
+      tx.executeSql(`UPDATE todoList SET name = (?) WHERE id = (?)`,
+        [name, id],
+        (_, res) => resolve(res),
+        (_, err) => reject()
+      )
+    })
+  });
+  return promise;
+}
+
+export const destroyTodo = (id) => {
+  const promise = new Promise((resolve, reject) => {
+    todoDB.transaction((tx) => {
+      tx.executeSql(`DELETE FROM todoList WHERE id = (?)`,
+        [id],
+        (_, res) => resolve(),
+        (_, err) => reject()
+      )
+    })
+  });
+  return promise;
+}
+
+export const getTodoList = () => {
+  const promise = new Promise((resolve, reject) => {
+    todoDB.transaction((tx) => {
+      tx.executeSql('SELECT * FROM todoList ORDER BY id DESC',
+      [],
+      (_, result) => {
+        const data = [];
+        for (const db of result.rows._array) {
+          data.push({
+            name: db.name,
+            id: db.id,
+          });
+        }
+        // console.log("category-income", data);
+        resolve(data);
+      },
+      (_, err) => reject(err)      
+      )
+    })
+  });
+  return promise;
+}
