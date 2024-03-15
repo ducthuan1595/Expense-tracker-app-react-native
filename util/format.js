@@ -14,3 +14,11 @@ export const formatInput = (e) => {
   };
   return result;
 }
+
+export const checkFormat = (data) => {
+  if(data >= 10) {
+    return data
+  } else {
+    return `0${data}`
+  }
+}

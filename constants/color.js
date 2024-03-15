@@ -76,5 +76,6 @@ export const bgColors = [
   '#f9e6c9',
   '#ffe8c5',
   '#ffd9dd',
-  '#daccf9'
+  '#daccf9',
+  // '#e8e7e6',
 ]

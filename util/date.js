@@ -17,7 +17,7 @@ export function getFollowWeek(date, data) {
   const endOfWeek = getEndOfWeek(date);
   const result = data.filter((e) => {
     const getDay = new Date(e.date).getDate();
-    if(getDay <= endOfWeek.getDate() && getDay >= startOfWeek.getDate()) {
+    if(getDay <= (endOfWeek.getDate() + 1) && getDay >= startOfWeek.getDate()) {
       return e
     }
   });
@@ -48,7 +48,7 @@ export function getStartOfWeek(date) {
 export function getEndOfWeek(date) {
   const now = new Date(date);
   const day = now.getDay();
-  const diff = now.getDate() + 6 - day;
+  const diff = now.getDate() + 7 - day;
   return new Date(now.setDate(diff));
 }
 
