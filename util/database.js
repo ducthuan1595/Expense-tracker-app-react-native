@@ -384,9 +384,9 @@ export const deleteTableExpense = () => {
 };
 export const deleteTableIncome = () => {
   const promise = new Promise((resolve, reject) => {
-    categoryIncomeDB.transaction((tx) => {
+    todoDB.transaction((tx) => {
       tx.executeSql(
-        "DROP TABLE IF EXISTS categories_income",
+        "DROP TABLE IF EXISTS todoList",
         [],
         () => resolve(),
         (_, err) => reject(err)
@@ -404,7 +404,8 @@ export const initTodo = () => {
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS todoList (
           id INTEGER PRIMARY KEY NOT NULL,
-          name TEXT UNIQUE NOT NULL
+          name TEXT UNIQUE NOT NULL,
+          isDone INTEGER DEFAULT 0
         )`,
         [],
         (_, res) => {
@@ -432,11 +433,11 @@ export const addTodo = (name) => {
   return promise
 }
 
-export const updateTodo = (name, id) => {
+export const updateTodo = (name, isDone, id) => {
   const promise = new Promise((resolve, reject) => {
     todoDB.transaction((tx) => {
-      tx.executeSql(`UPDATE todoList SET name = (?) WHERE id = (?)`,
-        [name, id],
+      tx.executeSql(`UPDATE todoList SET name = (?), isDone = (?) WHERE id = (?)`,
+        [name, isDone, id],
         (_, res) => resolve(res),
         (_, err) => reject()
       )
@@ -469,6 +470,7 @@ export const getTodoList = () => {
           data.push({
             name: db.name,
             id: db.id,
+            isDone: db.isDone
           });
         }
         // console.log("category-income", data);

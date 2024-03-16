@@ -11,9 +11,10 @@ import ChartPopup from "../popup/ChartPopup";
 import { GlobalStyles } from "../../constants/styles";
 import { ExpenseStore } from "../../store/context";
 
-const DATA = ["weekly", "monthly", "yearly", "total"];
+const EXPENSE = ["weekly", "monthly", "yearly", "total"];
+const TODO = ['weekly', 'monthly', 'yearly'];
 
-const SelectPicker = () => {
+const SelectPicker = ({mode}) => {
   const { valueSelectChart } = ExpenseStore();
   const [isPopup, setIsPopup] = useState(false);
 
@@ -31,7 +32,7 @@ const SelectPicker = () => {
           <Text style={styles.text}>{valueSelectChart}</Text>
         </Pressable>
       </View>
-      {isPopup && <ChartPopup data={DATA} setIsPopup={setIsPopup} />}
+      {isPopup && <ChartPopup data={mode === 'todo' ? TODO : EXPENSE} setIsPopup={setIsPopup} />}
     </>
   );
 };
@@ -41,6 +42,7 @@ export default SelectPicker;
 const styles = StyleSheet.create({
   container: {
     height: 26,
+    width: '100%',
     borderWidth: 1,
     borderColor: GlobalStyles.colors.primary50,
     marginRight: 24,

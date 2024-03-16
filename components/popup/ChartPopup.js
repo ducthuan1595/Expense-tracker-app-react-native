@@ -16,7 +16,7 @@ const ChartPopup = ({ data, setIsPopup }) => {
             setIsPopup(false);
           }}
         >
-          <Text style={{ textTransform: "capitalize" }}>{i}</Text>
+          <Text style={{ textTransform: "capitalize", width: '100%' }}>{i}</Text>
         </Pressable>
       ))}
     </View>
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   text: {
+    width: '100%',
     paddingVertical: 8,
   },
   pressed: {
