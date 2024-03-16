@@ -20,7 +20,10 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "1.0.0",
-      "bundleIdentifier": "com.thuanthien.expensestrackerapp"
+      "bundleIdentifier": "com.thuanthien.expensestrackerapp",
+      "infoPlist": {
+        "UIBackgroundModes": ["location", "fetch", "remote-notification"]
+      }
     },
     "android": {
       "adaptiveIcon": {

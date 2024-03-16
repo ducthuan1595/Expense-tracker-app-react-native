@@ -43,6 +43,7 @@ import SelectPicker from "./components/ui/SelectPicker";
 import AnualYear from "./screens/AnualYear";
 import TodoList from "./screens/TodoList";
 import ManagerTodo from "./components/todoList/ManagerTodo";
+import TodoChart from "./screens/TodoChart";
 
 SplashScreen.preventAutoHideAsync();
 // GoogleSignin.configure({
@@ -97,7 +98,7 @@ function ExpenseOverview() {
               />
             );
           }
-          return <SelectPicker />;
+          return <SelectPicker mode="expense" />;
         },
       })}
     >
@@ -148,16 +149,20 @@ function ManageTodoList () {
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
         headerLeft: (props) => <IconDrawer {...props} />,
         headerRight: ({ tintColor }) => {
-          return (
-            <IconButton
-              icon="add-circle"
-              size={24}
-              color={tintColor}
-              onPress={() => {
-                navigation.navigate("ManageTodo");
-              }}
-            />
-          );
+          if(route.name === 'TodoList') {
+            return (
+              <IconButton
+                icon="add-circle"
+                size={24}
+                color={tintColor}
+                onPress={() => {
+                  navigation.navigate("ManageTodo");
+                }}
+              />
+            );
+          } else {
+            return <SelectPicker mode='todo' />;
+          }
         },
       })}
     >
@@ -170,15 +175,15 @@ function ManageTodoList () {
             paddingBottom: 5
           },
           tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="list" size={size} color={color} />
+            return <Ionicons name="list-circle" size={size} color={color} />
           },
         }}
       />
       <Tab.Screen
-        name="Chart"
-        component={TodoList}
+        name="Statistical"
+        component={TodoChart}
         options={{
-          tabBarLabel: "Chart",
+          tabBarLabel: "Statistical",
           tabBarLabelStyle: {
             paddingBottom: 5
           },

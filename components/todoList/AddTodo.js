@@ -15,7 +15,7 @@ const AddTodo = ({todo}) => {
   const onSubmit = async () => {
     if(todo) {
       await updateTodo(inputValue);
-      updateTodoList({name: inputValue, id: todo.id})
+      updateTodoList({name: inputValue, id: todo.id, isDone: todo.isDone})
     }else {
       const id =  await addTodo(inputValue)
       addTodoList({name: inputValue, id})

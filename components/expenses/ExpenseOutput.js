@@ -60,7 +60,7 @@ const ExpenseOutput = ({ fallBack }) => {
         );
       },
     });
-  });
+  }, [currTimeLabel, currTimeValue, typeFollow, setCurrTimeValue]);
 
   const loadData = () => {
     const today = new Date();

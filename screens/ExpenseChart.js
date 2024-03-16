@@ -92,7 +92,6 @@ function ExpenseChart({ navigation }) {
       const data = getFollowWeek(today, expenses);
       return data;
     } else if (valueSelectChart.toLowerCase() === "monthly") {
-      console.log({currTimeValue});
       const data = getFollowMonth(currTimeValue, expenses);
       return data;
     } else if (valueSelectChart.toLowerCase() === "yearly") {
@@ -154,7 +153,7 @@ function ExpenseChart({ navigation }) {
       newArr.sort((a, b) => b.y - a.y);
       setData(newArr);
     }
-  }, [title, valueSelectChart, currTimeValue, currTimeLabel, setCurrTimeValue]);
+  }, [title, valueSelectChart, currTimeValue, currTimeLabel, setCurrTimeValue, expenses]);
 
   const getColor = () => {
     return data.map((a) => a.color);

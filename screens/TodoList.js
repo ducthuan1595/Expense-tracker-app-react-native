@@ -1,11 +1,12 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import {Calendar, Agenda, CalendarList} from 'react-native-calendars';
+import * as TaskManager from 'expo-task-manager';
 
 import Confetti from "../components/todoList/confetti/Confetti";
 
-import { getTodoList } from "../util/database";
+import { getTodoList, updateTodo } from "../util/database";
 import { TodoListStore } from "../store/todo/todoList";
 import { addTodoListApi } from "../api/todo";
 import { AuthStore } from "../store/authContext";
@@ -14,6 +15,7 @@ import TodoItem from "../components/todoList/TodoItem";
 import { GlobalStyles } from "../constants/styles";
 import { checkFormat } from "../util/format";
 import AgendaScreen from "../components/todoList/Agenda";
+import PrimaryButton from "../components/ui/PrimaryButton";
 
 const TodoList = ({navigation}) => {
   const { setTodoList, todoList } = TodoListStore();
@@ -23,10 +25,16 @@ const TodoList = ({navigation}) => {
   const [clock, setClock] = useState('');
   const [isCalendar, setIsCalendar] = useState(false);
 
-  useEffect(() => {
+  const fetchTodoList = () => {
     getTodoList().then(res => {
       setTodoList(res)
+      const todoDone = res.filter(todo => todo.isDone == 1);
+      setCheckList(todoDone)
     }).catch(err => console.error(err))
+  }
+
+  useEffect(() => {
+    fetchTodoList();
   }, [])
 
   useLayoutEffect(() => {
@@ -43,18 +51,6 @@ const TodoList = ({navigation}) => {
       const hour = currDate.getHours();
       const minute = currDate.getMinutes();
       const second = currDate.getSeconds();
-
-      if(second == 0) {
-        console.log('send api');
-        const data = {
-          todoList: checkList,
-          user: user.email,
-          percent: Math.ceil((checkList.length / todoList.length) * 100)
-        }
-        // addTodoListApi(data).then(res => {
-        //   console.log(res);
-        // }).catch(err => console.log(err))
-      }
     
       const format = `${checkFormat(month)}/${checkFormat(day)} - ${checkFormat(hour)}:${checkFormat(minute)}:${checkFormat(second)}`
       setClock(format)
@@ -66,6 +62,7 @@ const TodoList = ({navigation}) => {
       clearInterval(intervalId)
     }
   }, [])
+
 
   const calendar = () => {
     return (
@@ -80,19 +77,37 @@ const TodoList = ({navigation}) => {
     )
   };
 
-  const onCheck = (todo) => {
-    const isExist = checkList.findIndex(i => i.id === todo.id);
-    if(isExist !== -1) {
-      const newTodo = checkList.filter(i => i.id !== todo.id)
-      setCheckList(newTodo)
+  const onCheck = async(todo) => {
+    if(todo.isDone == 1) {
+      await updateTodo(todo.name, 0, todo.id)
     }else {
-      setCheckList((state) => [...state, todo])
+      await updateTodo(todo.name, 1, todo.id)
     }
+    fetchTodoList();
   }
 
   const styleColor = {
     backgroundColor: '#76f06d',
     borderRadius: 8,
+  }
+
+  const onSubmit = () => {
+    const currDate = new Date();
+    const data = {
+      todoList: todoList,
+      user: user.email,
+      percent: Math.ceil((checkList.length / todoList.length) * 100),
+      date: currDate
+    }
+    setCheckList([]);
+    todoList.forEach(todo => {
+      updateTodo(todo.name, 0,todo.id).then(() => {
+        fetchTodoList();
+      })
+    });
+    addTodoListApi(data).then(res => {
+      console.log('ok');
+    }).catch(err => console.log(err))
   }
 
   if(isCalendar) {
@@ -117,7 +132,12 @@ const TodoList = ({navigation}) => {
             <Text style={{color: '#12590d96'}}>completed</Text>
           </View>
         </View>
-        <FlatList data={todoList} renderItem={({item, index}) => <TodoItem item={item} index={index} onPress={() => onCheck(item)} style={styleColor} checkList={checkList} />} />
+        <FlatList data={todoList} keyExtractor={(item) => item.id} renderItem={({item, index}) => <TodoItem item={item} index={index} onPress={() => onCheck(item)} style={styleColor} />} />
+
+        <View>
+          <Text style={{fontSize: 12, fontStyle: 'italic', color: '#2dab0a'}}>Please, submit your todo list at the end of the day!</Text>
+          <PrimaryButton onPress={onSubmit} style={styles.btnSubmit}>Submit</PrimaryButton>
+        </View>
       </View>
 
       {/* {todo.length == checkList.length && <Confetti />} */}
@@ -160,5 +180,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 5
+  },
+  btnSubmit: {
+    // borderRadius: 10,
+    marginTop: 4
   }
 })

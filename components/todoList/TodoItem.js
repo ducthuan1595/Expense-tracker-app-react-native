@@ -1,11 +1,10 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Feather } from '@expo/vector-icons';
 
-const TodoItem = ({item, index, onPress, style, checkList}) => {
-  const isStyle = checkList.find(i => i.id === item.id);
+const TodoItem = ({item, index, onPress, style}) => {
   return (
     <View style={styles.content}>
-      <Pressable onPress={onPress} style={isStyle && style }><Feather name="square" size={22} color="tomato" /></Pressable>
+      <Pressable onPress={onPress} style={item.isDone === 1 && style }><Feather name="square" size={22} color="tomato" /></Pressable>
       <Text style={styles.text}>{++index}. {item.name}</Text>
     </View>
   );

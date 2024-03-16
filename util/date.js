@@ -1,7 +1,10 @@
-export function getFormatDate(date) {
-  return `${date.getFullYear()}-${
-    date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1)
-  }-${date.getDate() >= 10 ? date.getDate() : "0" + date.getDate()}`;
+export function getFormatDate(time) {
+  const date = new Date(time)
+  if(date) {
+    return `${date.getFullYear()}-${
+      date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1)
+    }-${date.getDate() >= 10 ? date.getDate() : "0" + date.getDate()}`;
+  }
 }
 
 export function getDateMinuteDays(date, days) {
@@ -17,16 +20,17 @@ export function getFollowWeek(date, data) {
   const endOfWeek = getEndOfWeek(date);
   const result = data.filter((e) => {
     const getDay = new Date(e.date).getDate();
-    if(getDay <= (endOfWeek.getDate() + 1) && getDay >= startOfWeek.getDate()) {
+    if(getDay <= (endOfWeek.getDate() + 1) && (getDay >= startOfWeek.getDate()) && new Date(e.date).getFullYear() == new Date().getFullYear()) {
       return e
     }
   });
   return result;
 }
 
-export function getFollowMonth(date, data) {
+export function getFollowMonth(month, data) {
   const result = data.filter((e) => {
-    return +getFormatDate(e.date).slice(5, 7) == +date;
+    if(+getFormatDate(e.date).slice(5, 7) == +month && +getFormatDate(e.date).slice(0, 4) == new Date().getFullYear())
+    return e
   });
   return result;
 }
