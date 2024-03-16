@@ -2,7 +2,7 @@
   "expo": {
     "name": "Manage Expense",
     "slug": "expense-stracker-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/pig.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/pig.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.thuanthien.expensestrackerapp",
