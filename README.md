@@ -7,7 +7,8 @@
 - Add and manage todo daily
 - Authentication with email
 
-# LINK INSTALL: https://expo.dev//accounts/thuanthien/projects/expense-stracker-app/builds/ce2efa38-6d14-434f-b279-4d3069ab6a41
+# LINK INSTALL: https://expo.dev//accounts/thuanthien/projects/expense-stracker-app/builds/ecd8829e-82bf-475f-be81-c6cacfee9840
+
 
 # SCREEN
 - all expense and income
