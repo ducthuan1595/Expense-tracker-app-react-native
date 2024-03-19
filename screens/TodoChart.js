@@ -97,19 +97,8 @@ function TodoChart({ navigation }) {
 
   useEffect(() => {
     const todo = loadData();
-    // console.log('load',todo);
-    // const objectChart = (data) => {
-    //   const object = {};
-    //   for (const item of data) {
-    //     object[item.category] =
-    //       (object[item.category] || 0) + Number(item.amount);
-    //   }
-    //   return object;
-    // };
+  
     let num = 0;
-
-    // const newExpense = objectChart(todo);
-    // console.log(newExpense);
     const newArr = [];
     for (let value of todo) {
       console.log(valueSelectChart);

@@ -30,7 +30,7 @@ import HeaderTime from "../components/ui/HeaderTime";
 import TotalTypeIncome from "../components/charts/TotalTypeIncome";
 
 import { getFollowMonth, getFollowWeek, getFollowYear } from "../util/date";
-import { getStartOfWeek } from "../util/date";
+import { getStartOfWeek, getEndOfWeek } from "../util/date";
 
 function ExpenseChart({ navigation }) {
   const { expenses, valueSelectChart, setValueSelectChart } = ExpenseStore();
@@ -57,7 +57,8 @@ function ExpenseChart({ navigation }) {
         return year;
       } else {
         setCurrTimeLabel(`from ${getStartOfWeek(day).getDate()}`);
-        return date;
+        // setCurrTimeValue(getEndOfWeek(day).getDate())
+        return getEndOfWeek(day).getDate();
       }
     });
   }, [valueSelectChart]);
@@ -187,6 +188,9 @@ function ExpenseChart({ navigation }) {
           Income
         </NavItem>
       </View>
+      {title == 'income' && 
+        <TotalTypeIncome data={loadData().filter((e) => e.type === "income")} />      
+      }
       <View style={styles.chart}>
         <VictoryPie
           key={data}
@@ -212,18 +216,11 @@ function ExpenseChart({ navigation }) {
         />
         {/* </VictoryScatter> */}
       </View>
-      {title == 'income' && 
-        <TotalTypeIncome data={loadData().filter((e) => e.type === "income")} />      
-      }
+      
       <View>
         {data.map((i) => (
           <ListChar item={i} key={i.x} />
         ))}
-        {/* <FlatList
-          data={data}
-          keyExtractor={(item) => item.category}
-          renderItem={({ item }) => <ListChar item={item} />}
-        /> */}
       </View>
     </ScrollView>
   );

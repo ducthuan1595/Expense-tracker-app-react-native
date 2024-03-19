@@ -24,7 +24,7 @@ const HeaderTime = ({
         return { opacity: 1 };
       }
     } else if (valueSelect.toLowerCase() === "weekly") {
-      setCurrTimeValue(getEndOfWeek(date).getDate());
+      // setCurrTimeValue(getEndOfWeek(date).getDate());
       return { opacity: 0 };
     }
   };

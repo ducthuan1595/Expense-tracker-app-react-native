@@ -41,7 +41,7 @@ const ExpenseOutput = ({ fallBack }) => {
         return year;
       } else {
         setCurrTimeLabel(`from ${getStartOfWeek(day).getDate()}`);
-        return date;
+        return getEndOfWeek(day).getDate();
       }
     });
   }, [typeFollow]);
